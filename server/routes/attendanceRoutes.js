@@ -8,7 +8,7 @@ import {
   getMonthlyAttendance,
   getAttendanceCalendar,
   getAllAttendanceAdmin,
-} from "../controllers/attendanceController.js";
+} from "../controllers/AttendanceController.js";
 
 import {
   validateCheckIn,
