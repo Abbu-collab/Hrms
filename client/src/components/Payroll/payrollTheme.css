@@ -1,0 +1,206 @@
+/* Payroll Module Theme & Design Tokens */
+:root {
+  --pr-primary: #6c5ce7;
+  --pr-primary-hover: #5847d0;
+  --pr-primary-light: #f5f4fb;
+  --pr-secondary: #00cec9;
+  --pr-success: #10b981;
+  --pr-success-bg: #ecfdf5;
+  --pr-warning: #f59e0b;
+  --pr-warning-bg: #fffbeb;
+  --pr-danger: #ef4444;
+  --pr-danger-bg: #fef2f2;
+  --pr-dark: #1e293b;
+  --pr-text: #334155;
+  --pr-text-muted: #64748b;
+  --pr-border: #e2e8f0;
+  --pr-card-bg: #ffffff;
+  --pr-bg: #f8fafc;
+  --pr-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --pr-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  --pr-shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.1);
+  --pr-radius-sm: 8px;
+  --pr-radius: 12px;
+  --pr-radius-lg: 16px;
+}
+
+.payroll-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.payroll-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--pr-card-bg);
+  padding: 24px;
+  border-radius: var(--pr-radius-lg);
+  box-shadow: var(--pr-shadow);
+  border: 1px solid var(--pr-border);
+}
+
+.payroll-header-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--pr-dark);
+}
+
+.payroll-header-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--pr-text-muted);
+}
+
+.payroll-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Primary & Secondary Buttons */
+.pr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--pr-radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pr-btn-primary {
+  background: var(--pr-primary);
+  color: #ffffff;
+}
+
+.pr-btn-primary:hover:not(:disabled) {
+  background: var(--pr-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.25);
+}
+
+.pr-btn-secondary {
+  background: #ffffff;
+  color: var(--pr-dark);
+  border-color: var(--pr-border);
+}
+
+.pr-btn-secondary:hover:not(:disabled) {
+  background: var(--pr-bg);
+  border-color: #cbd5e1;
+}
+
+.pr-btn-danger {
+  background: var(--pr-danger);
+  color: #ffffff;
+}
+
+.pr-btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.pr-btn-success {
+  background: var(--pr-success);
+  color: #ffffff;
+}
+
+.pr-btn-success:hover:not(:disabled) {
+  background: #059669;
+}
+
+.pr-btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.pr-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive 4-column Summary Cards Grid */
+.payroll-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;   /* equal height cards */
+}
+
+@media (max-width: 1024px) {
+  .payroll-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .payroll-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Table Card Wrapper */
+.payroll-card {
+  background: var(--pr-card-bg);
+  border-radius: var(--pr-radius-lg);
+  box-shadow: var(--pr-shadow);
+  border: 1px solid var(--pr-border);
+  padding: 24px;
+}
+
+/* Modal Overlay */
+.pr-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.pr-modal-content {
+  background: #ffffff;
+  border-radius: var(--pr-radius-lg);
+  box-shadow: var(--pr-shadow-lg);
+  width: 100%;
+  max-width: 500px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .payroll-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .payroll-header-actions {
+    width: 100%;
+  }
+
+  .pr-btn {
+    width: 100%;
+  }
+}

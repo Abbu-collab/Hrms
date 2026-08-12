@@ -1,0 +1,64 @@
+.dept-breakdown-container {
+  width: 100%;
+}
+
+.dept-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dept-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dept-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.dept-name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dept-color-badge {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.dept-name {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.dept-emp-count {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.dept-amount {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.dept-progress-track {
+  width: 100%;
+  height: 10px;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.dept-progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.4s ease-out;
+}

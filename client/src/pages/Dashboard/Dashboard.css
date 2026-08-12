@@ -1,0 +1,499 @@
+/* ==========================================
+   HRMS ENTERPRISE DASHBOARD STYLES
+   ========================================== */
+
+.dashboard-page {
+  min-height: 100vh;
+  padding: 32px;
+  background-color: var(--bg-app, #f8fafc);
+  font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+  box-sizing: border-box;
+  color: var(--slate-900, #0f172a);
+}
+
+/* 1. Header & Welcome Banner */
+.dashboard-header-card {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #312e81 100%);
+  border-radius: var(--radius-xl, 20px);
+  padding: 32px;
+  color: #ffffff;
+  margin-bottom: 28px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-header-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+}
+
+.dashboard-header-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-user-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-500, #6366f1) 0%, var(--primary-700, #4338ca) 100%);
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-header-text h1 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.dashboard-header-text p {
+  margin: 0;
+  color: var(--slate-300, #cbd5e1);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius-full, 9999px);
+  font-size: 12px;
+  font-weight: 600;
+  color: #a5b4fc;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 2. Statistics Cards Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+/* Employee role: only 2 stat cards — use 2 equal columns */
+.stats-grid--employee {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.stat-card-custom {
+  background: #ffffff;
+  border-radius: var(--radius-lg, 16px);
+  border: 1px solid var(--border-color, #e2e8f0);
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(15, 23, 42, 0.05));
+  transition: var(--transition-normal, all 0.25s ease);
+}
+
+.stat-card-custom:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md, 0 10px 20px -5px rgba(15, 23, 42, 0.08));
+  border-color: var(--slate-300, #cbd5e1);
+}
+
+.stat-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.stat-icon-blue {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.stat-icon-green {
+  background: #ecfdf5;
+  color: #10b981;
+}
+
+.stat-icon-amber {
+  background: #fffbeb;
+  color: #f59e0b;
+}
+
+.stat-icon-purple {
+  background: #f3e8ff;
+  color: #9333ea;
+}
+
+.stat-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-details p {
+  margin: 0;
+  color: var(--slate-500, #64748b);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.stat-details h2 {
+  margin: 0;
+  color: var(--slate-900, #0f172a);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.stat-trend {
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.stat-trend-up {
+  color: #047857;
+}
+
+.stat-trend-neutral {
+  color: #b45309;
+}
+
+/* 3. Main Dashboard Layout Split */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.dashboard-main-column,
+.dashboard-side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Quick Actions Grid */
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+/* Employee role: 4 items fit in a 2x2 grid */
+.quick-actions-grid--employee {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+
+.quick-action-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-md, 12px);
+  cursor: pointer;
+  transition: var(--transition-fast, all 0.2s ease);
+  text-align: left;
+  width: 100%;
+}
+
+.quick-action-item:hover {
+  background: var(--primary-50, #eef2ff);
+  border-color: var(--primary-200, #c7d2fe);
+  transform: translateY(-2px);
+}
+
+.quick-action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--slate-100, #f1f5f9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.quick-action-item:hover .quick-action-icon {
+  background: #ffffff;
+  color: var(--primary-600, #4f46e5);
+}
+
+.quick-action-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.quick-action-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slate-900, #0f172a);
+}
+
+.quick-action-desc {
+  font-size: 12px;
+  color: var(--slate-500, #64748b);
+}
+
+/* Attendance Metrics Bar List */
+.attendance-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bar-item {
+  display: grid;
+  grid-template-columns: 110px 1fr 50px;
+  align-items: center;
+  gap: 14px;
+}
+
+.bar-item span {
+  color: var(--slate-600, #475569);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.bar-item strong {
+  color: var(--slate-900, #0f172a);
+  font-size: 13px;
+  text-align: right;
+  font-weight: 700;
+}
+
+.bar-track {
+  height: 10px;
+  background: var(--slate-100, #f1f5f9);
+  border-radius: var(--radius-full, 9999px);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full, 9999px);
+  transition: width 0.6s ease;
+}
+
+.bar-fill-primary {
+  background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.bar-fill-success {
+  background: linear-gradient(90deg, #34d399 0%, #10b981 100%);
+}
+
+.bar-fill-warning {
+  background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.bar-fill-danger {
+  background: linear-gradient(90deg, #f87171 0%, #ef4444 100%);
+}
+
+/* Notifications & Activity Items */
+.notifications-list,
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--slate-50, #f8fafc);
+  border-radius: var(--radius-sm, 8px);
+  border-left: 3px solid var(--primary-500, #6366f1);
+}
+
+.notification-item-warning {
+  border-left-color: var(--warning, #f59e0b);
+}
+
+.notification-item-success {
+  border-left-color: var(--success, #10b981);
+}
+
+.notification-content p {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-800, #1e293b);
+}
+
+.notification-content span {
+  font-size: 11px;
+  color: var(--slate-500, #64748b);
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--slate-100, #f1f5f9);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-50, #eef2ff);
+  color: var(--primary-700, #4338ca);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.activity-details {
+  flex: 1;
+}
+
+.activity-details strong {
+  color: var(--slate-900, #0f172a);
+  font-size: 13px;
+}
+
+.activity-details p {
+  margin: 2px 0 0;
+  color: var(--slate-500, #64748b);
+  font-size: 12px;
+}
+
+.activity-time {
+  color: var(--slate-400, #94a3b8);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* Status Pill Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge-active {
+  background: var(--success-bg, #ecfdf5);
+  color: var(--success-text, #047857);
+}
+
+.status-badge-leave {
+  background: var(--warning-bg, #fffbeb);
+  color: var(--warning-text, #b45309);
+}
+
+/* Responsive Rules */
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* Employee grid is already 2-col; keep it as-is at 1200px */
+  .stats-grid--employee {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-page {
+    padding: 16px;
+  }
+  .dashboard-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+  }
+  .stats-grid,
+  .stats-grid--employee {
+    grid-template-columns: 1fr;
+  }
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .dashboard-page {
+    padding: 8px;
+  }
+  .dashboard-header-card {
+    padding: 14px;
+  }
+  .dashboard-header-text h1 {
+    font-size: 20px;
+  }
+  .stat-card-custom {
+    padding: 14px;
+    gap: 12px;
+  }
+  .stat-details h2 {
+    font-size: 22px;
+  }
+}

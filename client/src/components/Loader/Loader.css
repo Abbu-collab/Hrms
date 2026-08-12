@@ -1,0 +1,132 @@
+/* ==========================================
+   HRMS ENTERPRISE LOADER & SKELETON STYLES
+   ========================================== */
+
+/* 1. Spinner */
+.hrms-spinner {
+  display: inline-block;
+  border-style: solid;
+  border-color: var(--primary-600, #4f46e5);
+  border-right-color: transparent !important;
+  border-radius: 50%;
+  animation: hrms-spin 0.8s linear infinite;
+  box-sizing: border-box;
+}
+
+.hrms-spinner-sm {
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+}
+
+.hrms-spinner-md {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.hrms-spinner-lg {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}
+
+@keyframes hrms-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 2. Section Loader */
+.hrms-loader-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3, 12px);
+  padding: var(--space-8, 32px);
+  width: 100%;
+  min-height: 160px;
+  color: var(--slate-600, #475569);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 500;
+}
+
+/* 3. Page Loader */
+.hrms-loader-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hrms-loader-page-content {
+  background: var(--bg-surface, #ffffff);
+  padding: 28px 40px;
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: var(--shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.hrms-loader-page-text {
+  font-size: var(--font-size-base, 1rem);
+  font-weight: 600;
+  color: var(--slate-800, #1e293b);
+}
+
+/* 4. Skeleton Loader */
+.hrms-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--slate-200, #e2e8f0) 25%,
+    var(--slate-100, #f1f5f9) 37%,
+    var(--slate-200, #e2e8f0) 63%
+  );
+  background-size: 400% 100%;
+  animation: hrms-skeleton-shimmer 1.4s ease infinite;
+  border-radius: var(--radius-sm, 8px);
+}
+
+.hrms-skeleton-text {
+  height: 16px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.hrms-skeleton-title {
+  height: 24px;
+  width: 60%;
+  margin-bottom: 12px;
+}
+
+.hrms-skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.hrms-skeleton-card {
+  height: 120px;
+  width: 100%;
+  border-radius: var(--radius-md, 12px);
+}
+
+@keyframes hrms-skeleton-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}

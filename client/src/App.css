@@ -1,0 +1,25 @@
+/* ==========================================
+   HRMS APPLICATION SPECIFIC STYLES
+   ========================================== */
+
+/* Main layout wrappers */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+}
+
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.main-content {
+  flex: 1;
+  padding: var(--space-6);
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}

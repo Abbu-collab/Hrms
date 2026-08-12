@@ -1,0 +1,38 @@
+.payroll-error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  margin: 16px 0;
+}
+
+.payroll-error-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fee2e2;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.payroll-error-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.payroll-error-desc {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: #b91c1c;
+  max-width: 450px;
+}

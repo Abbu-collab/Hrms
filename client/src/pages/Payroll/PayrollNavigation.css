@@ -1,0 +1,45 @@
+.payroll-main-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.payroll-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  padding: 8px 12px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  width: fit-content;
+}
+
+.payroll-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.payroll-tab:hover {
+  color: #1e293b;
+  background: #f8fafc;
+}
+
+.payroll-tab.active {
+  color: #6c5ce7;
+  background: #f5f4fb;
+}
+
+.payroll-content-body {
+  width: 100%;
+}

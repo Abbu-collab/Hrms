@@ -1,0 +1,205 @@
+/* ==========================================
+   USERS MANAGEMENT PAGE STYLING
+   ========================================== */
+
+.users-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ── Stat Cards ───────────────────────────────────────────────── */
+.users-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-5);
+}
+
+.user-stat-card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--slate-200);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  transition: var(--transition-normal);
+}
+
+.user-stat-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--slate-300);
+}
+
+.user-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.user-stat-icon.primary { background-color: var(--primary-50);   color: var(--primary-600); }
+.user-stat-icon.success { background-color: var(--success-bg);   color: var(--success-text); }
+.user-stat-icon.warning { background-color: var(--warning-bg);   color: var(--warning-text); }
+.user-stat-icon.info    { background-color: var(--info-bg);      color: var(--info-text); }
+
+.user-stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--slate-500);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.user-stat-value {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--slate-900);
+}
+
+/* ── Toolbar ──────────────────────────────────────────────────── */
+.users-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.users-search-input {
+  flex: 1;
+  min-width: 260px;
+}
+
+.users-filter-select {
+  width: auto;
+  min-width: 160px;
+}
+
+/* ── Card Wrapper ─────────────────────────────────────────────── */
+.users-card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--slate-200);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* ── Table Horizontal Scroll Wrapper ──────────────────────────── */
+.users-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Table ────────────────────────────────────────────────────── */
+.users-table {
+  width: 100%;
+  min-width: 780px;        /* ensures table never collapses */
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.users-table thead th {
+  background: var(--slate-50, #f8fafc);
+  color: var(--slate-500, #64748b);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--slate-200, #e2e8f0);
+  white-space: nowrap;
+  text-align: left;
+}
+
+.users-table tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--slate-100, #f1f5f9);
+  color: var(--slate-700, #334155);
+  vertical-align: middle;
+}
+
+.users-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.users-table tbody tr:hover {
+  background: var(--slate-50, #f8fafc);
+}
+
+/* ── Name Cell (avatar + text) ────────────────────────────────── */
+.users-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.users-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.users-name-text {
+  font-weight: 600;
+  color: var(--slate-900, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Email Cell ───────────────────────────────────────────────── */
+.users-email-text {
+  color: var(--slate-500, #64748b);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+/* ── Employee ID ──────────────────────────────────────────────── */
+.users-emp-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--primary-600, #4f46e5);
+  background: var(--primary-50, #eef2ff);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ── Empty / Loading placeholder ─────────────────────────────── */
+.users-table-placeholder {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--slate-500, #64748b);
+  font-size: 0.9rem;
+}
+
+/* ── Responsive Breakpoints ───────────────────────────────────── */
+@media (max-width: 768px) {
+  .users-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .users-search-input,
+  .users-filter-select {
+    width: 100%;
+    min-width: 0;
+  }
+}

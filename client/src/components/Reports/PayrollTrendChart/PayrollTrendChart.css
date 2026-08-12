@@ -1,0 +1,81 @@
+.payroll-trend-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.gross-dot {
+  background-color: #2563eb;
+}
+
+.net-dot {
+  background-color: #059669;
+}
+
+.svg-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.trend-svg {
+  width: 100%;
+  height: auto;
+  min-height: 240px;
+}
+
+.chart-point-group circle {
+  transition: r 0.2s ease, stroke-width 0.2s ease;
+  cursor: pointer;
+}
+
+.chart-point-group:hover circle {
+  r: 8;
+  stroke-width: 3;
+}
+
+.chart-loading-state,
+.chart-empty-state,
+.chart-error-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px dashed #cbd5e1;
+  padding: 20px;
+  text-align: center;
+}
+
+.chart-error-state {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fca5a5;
+}

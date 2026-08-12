@@ -1,0 +1,97 @@
+.top-earners-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.top-earners-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.top-earners-table th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.top-earners-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+.top-earners-table tr:hover {
+  background-color: #f8fafc;
+}
+
+.rank-cell {
+  width: 60px;
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.rank-1 {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.rank-2 {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.rank-3 {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.emp-id-cell {
+  font-weight: 600;
+  color: #0f172a;
+  font-family: monospace;
+}
+
+.net-pay-cell {
+  font-weight: 700;
+  color: #059669;
+}
+
+.table-loading-state,
+.table-empty-state,
+.table-error-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  color: #64748b;
+  font-size: 14px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+  padding: 16px;
+  text-align: center;
+}
+
+.table-error-state {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fca5a5;
+}

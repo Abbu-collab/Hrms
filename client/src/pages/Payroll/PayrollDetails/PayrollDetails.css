@@ -1,0 +1,153 @@
+.payroll-sheet {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.meta-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.meta-val {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.attendance-strip {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.strip-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.strip-item span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.strip-item strong {
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.sheet-body-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.column-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.column-title {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding: 6px 0;
+  color: #475569;
+}
+
+.total-item-row {
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 15px;
+}
+
+.net-pay-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #6c5ce7, #5847d0);
+  color: #ffffff;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(108, 92, 231, 0.25);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.net-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.net-sublabel {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.net-amount {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.sheet-footer-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13px;
+  color: #64748b;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.sheet-footer-meta div {
+  display: flex;
+  gap: 6px;
+}
+
+.sheet-footer-meta strong {
+  color: #1e293b;
+}

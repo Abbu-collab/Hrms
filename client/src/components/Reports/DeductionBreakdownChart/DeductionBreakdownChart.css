@@ -1,0 +1,89 @@
+.deduction-chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.donut-visual {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-center-text {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.donut-total-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.donut-total-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.deduction-legend-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.deduction-legend-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f8fafc;
+}
+
+.legend-label-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-badge {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-text {
+  font-weight: 500;
+  color: #334155;
+}
+
+.legend-val-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-amount {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.legend-pct {
+  font-size: 11px;
+  color: #94a3b8;
+}

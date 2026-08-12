@@ -1,0 +1,32 @@
+.payroll-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  margin: 16px 0;
+}
+
+.payroll-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3.5px solid #e2e8f0;
+  border-top-color: #6c5ce7;
+  border-radius: 50%;
+  animation: pr-spin 0.8s linear infinite;
+  margin-bottom: 14px;
+}
+
+.payroll-loading-message {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+@keyframes pr-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

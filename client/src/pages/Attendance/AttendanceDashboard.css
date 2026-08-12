@@ -1,0 +1,1166 @@
+/* ==========================================
+   ATTENDANCE DASHBOARD STYLING
+   ========================================== */
+
+.attendance-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.attendance-hero-card {
+  background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-8);
+  color: var(--text-white);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  border: 1px solid var(--slate-700);
+}
+
+.attendance-hero-info h1 {
+  color: var(--text-white);
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  margin-bottom: var(--space-1);
+}
+
+.attendance-hero-info p {
+  color: var(--slate-300);
+  font-size: var(--font-size-sm);
+}
+
+.attendance-clock-widget {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.clock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.clock-label {
+  font-size: var(--font-size-xs);
+  color: var(--slate-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.clock-value {
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--text-white);
+  font-family: monospace;
+}
+
+.clock-divider {
+  width: 1px;
+  height: 28px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.attendance-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-6);
+}
+
+.col-span-12 {
+  grid-column: span 12 / span 12;
+}
+
+.col-span-6 {
+  grid-column: span 6 / span 6;
+}
+
+.col-span-4 {
+  grid-column: span 4 / span 4;
+}
+
+.col-span-8 {
+  grid-column: span 8 / span 8;
+}
+
+.attendance-section-box {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--slate-200);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+  transition: var(--transition-normal);
+}
+
+.attendance-section-box:hover {
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 1024px) {
+
+  .col-span-6,
+  .col-span-4,
+  .col-span-8 {
+    grid-column: span 12 / span 12;
+  }
+}
+
+@media (max-width: 768px) {
+  .attendance-hero-card {
+    padding: var(--space-4) var(--space-4);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .attendance-clock-widget {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .attendance-hero-info h1 {
+    font-size: var(--font-size-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .attendance-clock-widget {
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .clock-value {
+    font-size: var(--font-size-base);
+  }
+}
+
+
+/* ==========================================
+   ADMIN ATTENDANCE MONITOR
+   ========================================== */
+
+.admin-attendance-monitor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* ── Stats Row ── */
+.admin-att-stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-4);
+}
+
+.admin-att-stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  transition: var(--transition-normal);
+}
+
+.admin-att-stat-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--slate-300);
+}
+
+.admin-att-stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.admin-att-stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--slate-500);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+/* ── Toolbar ── */
+.admin-att-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  background: var(--bg-card);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-att-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.admin-att-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--slate-400);
+  pointer-events: none;
+}
+
+.admin-att-search {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--slate-300);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--slate-700);
+  background: var(--bg-surface);
+  transition: var(--transition-fast);
+  outline: none;
+}
+
+.admin-att-search:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.admin-att-filter-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--slate-500);
+  flex-shrink: 0;
+}
+
+.admin-att-filter-select {
+  padding: 8px 12px;
+  border: 1px solid var(--slate-300);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--slate-700);
+  background: var(--bg-surface);
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.admin-att-filter-select:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.admin-att-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  white-space: nowrap;
+  padding: 8px 16px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+/* ── Table Container ── */
+.admin-att-table-container {
+  background: var(--bg-card);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.admin-att-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-att-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  min-width: 800px;
+}
+
+.admin-att-table thead {
+  background: var(--slate-50);
+  border-bottom: 2px solid var(--slate-200);
+}
+
+.admin-att-table th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.admin-att-table tbody tr {
+  border-bottom: 1px solid var(--slate-100);
+  transition: background 0.12s;
+}
+
+.admin-att-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.admin-att-table tbody tr:hover {
+  background: var(--slate-50);
+}
+
+.admin-att-table td {
+  padding: var(--space-3) var(--space-4);
+  color: var(--slate-700);
+  vertical-align: middle;
+}
+
+/* Employee Cell */
+.att-emp-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.att-emp-name {
+  font-weight: 600;
+  color: var(--slate-800);
+}
+
+.att-emp-email {
+  font-size: var(--font-size-xs);
+  color: var(--slate-400);
+}
+
+/* Role Badge */
+.att-role-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.att-role-admin {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.att-role-hr {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.att-role-employee {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* Status Badges */
+.att-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.att-badge-present {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.att-badge-late {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.att-badge-halfday {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.att-badge-early {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.att-badge-default {
+  background: var(--slate-100);
+  color: var(--slate-600);
+}
+
+.att-remarks {
+  color: var(--slate-400);
+  font-size: var(--font-size-xs);
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Loading / Empty / Error states ── */
+.att-loading-state,
+.att-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-6);
+  gap: var(--space-3);
+  color: var(--slate-400);
+  text-align: center;
+}
+
+.att-empty-state h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--slate-600);
+  margin: 0;
+}
+
+.att-empty-state p {
+  font-size: var(--font-size-sm);
+  max-width: 360px;
+}
+
+.att-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--slate-200);
+  border-top-color: var(--primary-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinning {
+  animation: spin 0.8s linear infinite;
+}
+
+.att-status-msg {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.att-error {
+  background: var(--danger-bg, #fee2e2);
+  color: var(--danger, #dc2626);
+  border: 1px solid #fca5a5;
+}
+
+.admin-att-count {
+  font-size: var(--font-size-xs);
+  color: var(--slate-400);
+  text-align: right;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .admin-att-stats-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-att-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-att-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-att-search-wrap {
+    min-width: unset;
+  }
+
+  .admin-att-action-btn {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-att-stats-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .admin-att-stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================
+   CHECK IN CARD — Professional Redesign
+   ========================================== */
+
+.checkin-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  height: 100%;
+}
+
+.checkin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.checkin-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.checkin-title {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--slate-900);
+  margin: 0;
+}
+
+.checkin-date {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-xs);
+  color: var(--slate-500);
+}
+
+.checkin-shift-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: var(--primary-50, #eef2ff);
+  color: var(--primary-600, #4f46e5);
+  border: 1px solid var(--primary-200, #c7d2fe);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.checkin-timer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.checkin-timer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.checkin-timer-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.checkin-timer-value {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  font-family: monospace;
+  color: var(--slate-900);
+  letter-spacing: 0.05em;
+}
+
+.checkin-times {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.checkin-time-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.checkin-time-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--slate-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.checkin-time-value {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--slate-800);
+}
+
+.checkin-time-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--slate-300);
+}
+
+/* Inline feedback messages */
+.checkin-message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.checkin-message-success {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.checkin-message-error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* Action buttons */
+.checkin-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.checkin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 120px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.checkin-btn-in {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+}
+
+.checkin-btn-in:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.45);
+  transform: translateY(-1px);
+}
+
+.checkin-btn-in:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.checkin-btn-out {
+  background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+}
+
+.checkin-btn-out:hover:not(:disabled) {
+  background: linear-gradient(135deg, #047857 0%, #0f766e 100%);
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.45);
+  transform: translateY(-1px);
+}
+
+.checkin-btn-out:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.checkin-btn-disabled,
+.checkin-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.checkin-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* Status row */
+.checkin-status-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--slate-100);
+}
+
+.checkin-status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-active {
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.dot-done {
+  background: #3b82f6;
+}
+
+.dot-idle {
+  background: var(--slate-300);
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.1);
+  }
+}
+
+.checkin-status-text {
+  font-size: var(--font-size-xs);
+  color: var(--slate-500);
+  font-weight: 500;
+}
+
+/* ==========================================
+   TODAY ATTENDANCE CARD — CSS-based styling
+   ========================================== */
+
+.today-att-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.today-att-title {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--slate-900);
+  margin: 0 0 var(--space-3);
+}
+
+.today-att-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.today-att-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--space-3);
+  background: var(--slate-50);
+  border: 1px solid var(--slate-100);
+  border-radius: var(--radius-md);
+}
+
+.today-att-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.today-att-value {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--slate-800);
+}
+
+.today-att-status-present {
+  color: #15803d;
+}
+
+.today-att-status-late {
+  color: #b45309;
+}
+
+.today-att-status-halfday {
+  color: #7c3aed;
+}
+
+.today-att-status-early {
+  color: #dc2626;
+}
+
+.today-att-status-default {
+  color: var(--slate-600);
+}
+
+/* ==========================================
+   ATTENDANCE CALENDAR — Professional Styling
+   ========================================== */
+
+.att-calendar-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.att-cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.att-cal-title {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--slate-900);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.att-cal-subtitle {
+  font-size: var(--font-size-xs);
+  color: var(--slate-500);
+  margin: 2px 0 0;
+}
+
+.att-cal-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.att-cal-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--slate-300);
+  background: var(--bg-card);
+  color: var(--slate-700);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.att-cal-nav-btn:hover {
+  background: var(--slate-100);
+  border-color: var(--slate-400);
+}
+
+.att-cal-select {
+  padding: 6px 12px;
+  border: 1px solid var(--slate-300);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--slate-700);
+  background: var(--bg-card);
+  cursor: pointer;
+  outline: none;
+}
+
+.att-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.att-cal-day-header {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 0;
+}
+
+.att-cal-cell {
+  background: var(--bg-card);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  min-height: 58px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: var(--transition-fast);
+}
+
+.att-cal-cell.empty {
+  background: transparent;
+  border-color: transparent;
+}
+
+.att-cal-cell.today {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.att-cal-day-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--slate-700);
+}
+
+.att-cal-status-pill {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.att-cal-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--slate-100);
+  font-size: var(--font-size-xs);
+  color: var(--slate-600);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot.present {
+  background: #22c55e;
+}
+
+.legend-dot.late {
+  background: #ef4444;
+}
+
+.legend-dot.halfday {
+  background: #f59e0b;
+}
+
+.legend-dot.early {
+  background: #a855f7;
+}
+
+.legend-dot.leave {
+  background: #0284c7;
+}
+
+@media (max-width: 640px) {
+  .att-cal-grid {
+    gap: 4px;
+  }
+
+  .att-cal-cell {
+    min-height: 44px;
+    padding: 4px;
+  }
+
+  .att-cal-status-pill {
+    font-size: 9px;
+    padding: 1px 4px;
+  }
+}
+
+/* ==========================================
+   ATTENDANCE TABLE — Responsive Scroll
+   (Attendance History & Monthly Attendance)
+   ========================================== */
+
+/* Scrollable wrapper — mirrors Leave Calendar's .table-wrapper */
+.table-responsive.table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Prevent the wrapper itself from stretching the parent card */
+  display: block;
+}
+
+/* Give the table a sensible minimum so cells stay readable */
+.table-responsive.table-wrapper .table {
+  width: 100%;
+  min-width: 540px;          /* enough for 5-col Attendance History */
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.table-responsive.table-wrapper .table thead {
+  background: var(--slate-50);
+  border-bottom: 2px solid var(--slate-200);
+}
+
+.table-responsive.table-wrapper .table th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.table-responsive.table-wrapper .table tbody tr {
+  border-bottom: 1px solid var(--slate-100);
+  transition: background 0.12s;
+}
+
+.table-responsive.table-wrapper .table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table-responsive.table-wrapper .table tbody tr:hover {
+  background: var(--slate-50);
+}
+
+.table-responsive.table-wrapper .table td {
+  padding: var(--space-3) var(--space-4);
+  color: var(--slate-700);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Empty-state cell should be allowed to wrap / center */
+.table-responsive.table-wrapper .table .empty-state {
+  white-space: normal;
+  text-align: center;
+  padding: var(--space-10) var(--space-4);
+  color: var(--slate-400);
+  font-size: var(--font-size-sm);
+}
+
+/* ── Slim custom scrollbar inside table wrapper ── */
+.table-responsive.table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-responsive.table-wrapper::-webkit-scrollbar-track {
+  background: var(--slate-100);
+  border-radius: 4px;
+}
+
+.table-responsive.table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--slate-300);
+  border-radius: 4px;
+}
+
+.table-responsive.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--slate-400);
+}
+
+/* ── Mobile overrides ── */
+@media (max-width: 768px) {
+  /* Clamp the section card so it never exceeds viewport width */
+  .attendance-section-box {
+    max-width: 100%;
+    overflow: hidden;       /* clip; the inner wrapper scrolls independently */
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .attendance-section-box {
+    padding: var(--space-3);
+  }
+
+  .table-responsive.table-wrapper .table {
+    font-size: var(--font-size-xs);
+  }
+
+  .table-responsive.table-wrapper .table th,
+  .table-responsive.table-wrapper .table td {
+    padding: var(--space-2) var(--space-3);
+  }
+}

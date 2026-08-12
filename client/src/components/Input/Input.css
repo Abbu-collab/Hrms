@@ -1,0 +1,153 @@
+/* ==========================================
+   HRMS ENTERPRISE INPUT STYLES
+   ========================================== */
+
+.hrms-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1, 6px);
+  margin-bottom: var(--space-4, 16px);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hrms-input-label {
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 600;
+  color: var(--slate-700, #334155);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hrms-input-required-star {
+  color: var(--danger, #ef4444);
+}
+
+.hrms-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.hrms-input-field {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+  font-size: var(--font-size-sm, 0.875rem);
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--border-color, #cbd5e1);
+  background-color: var(--bg-surface, #ffffff);
+  color: var(--slate-900, #0f172a);
+  transition: var(--transition-fast, all 0.2s ease);
+  outline: none;
+  box-sizing: border-box;
+}
+
+textarea.hrms-input-field {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.hrms-input-field:focus {
+  border-color: var(--primary-500, #6366f1);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+
+.hrms-input-field::placeholder {
+  color: var(--slate-400, #94a3b8);
+}
+
+/* Icon padding adjustments */
+.hrms-input-has-left-icon .hrms-input-field {
+  padding-left: 38px;
+}
+
+.hrms-input-has-right-icon .hrms-input-field {
+  padding-right: 38px;
+}
+
+.hrms-input-left-icon {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--slate-400, #94a3b8);
+  pointer-events: none;
+  font-size: 1rem;
+}
+
+.hrms-input-right-icon,
+.hrms-input-password-toggle {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--slate-500, #64748b);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.15s ease;
+}
+
+.hrms-input-password-toggle:hover {
+  color: var(--primary-600, #4f46e5);
+}
+
+/* States */
+.hrms-input-error .hrms-input-field {
+  border-color: var(--danger, #ef4444);
+  background-color: var(--danger-bg, #fef2f2);
+}
+
+.hrms-input-error .hrms-input-field:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+}
+
+.hrms-input-success .hrms-input-field {
+  border-color: var(--success, #10b981);
+  background-color: var(--success-bg, #ecfdf5);
+}
+
+.hrms-input-success .hrms-input-field:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+
+.hrms-input-disabled .hrms-input-field {
+  background-color: var(--slate-100, #f1f5f9);
+  color: var(--slate-500, #64748b);
+  cursor: not-allowed;
+  border-color: var(--slate-200, #e2e8f0);
+}
+
+/* Helper Text & Error Message */
+.hrms-input-helper {
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--slate-500, #64748b);
+  margin-top: 2px;
+}
+
+.hrms-input-error-msg {
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--danger-text, #b91c1c);
+  font-weight: 500;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hrms-input-success-msg {
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--success-text, #047857);
+  font-weight: 500;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

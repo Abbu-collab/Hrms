@@ -1,0 +1,171 @@
+/* ==========================================
+   HRMS ENTERPRISE BUTTON STYLES
+   ========================================== */
+
+.hrms-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 8px);
+  font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+  font-weight: 600;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: var(--transition-fast, all 0.2s cubic-bezier(0.4, 0, 0.2, 1));
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.hrms-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.35);
+}
+
+/* Size Variants */
+.hrms-btn-sm {
+  padding: 6px 12px;
+  font-size: var(--font-size-xs, 0.75rem);
+  height: 32px;
+  border-radius: var(--radius-sm, 6px);
+}
+
+.hrms-btn-md {
+  padding: 9px 18px;
+  font-size: var(--font-size-sm, 0.875rem);
+  height: 40px;
+  border-radius: var(--radius-md, 10px);
+}
+
+.hrms-btn-lg {
+  padding: 12px 24px;
+  font-size: var(--font-size-base, 1rem);
+  height: 48px;
+  border-radius: var(--radius-md, 12px);
+}
+
+/* Color & Style Variants */
+
+/* Primary */
+.hrms-btn-primary {
+  background: linear-gradient(135deg, var(--primary-600, #4f46e5) 0%, var(--primary-700, #4338ca) 100%);
+  color: var(--text-white, #ffffff);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+  border-color: transparent;
+}
+
+.hrms-btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--primary-700, #4338ca) 0%, var(--primary-800, #3730a3) 100%);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+  transform: translateY(-1px);
+}
+
+.hrms-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
+}
+
+/* Secondary */
+.hrms-btn-secondary {
+  background-color: var(--slate-100, #f1f5f9);
+  color: var(--slate-700, #334155);
+  border-color: var(--slate-200, #e2e8f0);
+}
+
+.hrms-btn-secondary:hover:not(:disabled) {
+  background-color: var(--slate-200, #e2e8f0);
+  color: var(--slate-900, #0f172a);
+  border-color: var(--slate-300, #cbd5e1);
+  transform: translateY(-1px);
+}
+
+/* Success */
+.hrms-btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  border-color: transparent;
+}
+
+.hrms-btn-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Warning */
+.hrms-btn-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+  border-color: transparent;
+}
+
+.hrms-btn-warning:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Danger */
+.hrms-btn-danger {
+  background: linear-gradient(135deg, var(--danger, #ef4444) 0%, #dc2626 100%);
+  color: var(--text-white, #ffffff);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+  border-color: transparent;
+}
+
+.hrms-btn-danger:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Outline */
+.hrms-btn-outline {
+  background-color: transparent;
+  border-color: var(--primary-600, #4f46e5);
+  color: var(--primary-600, #4f46e5);
+}
+
+.hrms-btn-outline:hover:not(:disabled) {
+  background-color: var(--primary-50, #eef2ff);
+  border-color: var(--primary-700, #4338ca);
+  color: var(--primary-700, #4338ca);
+  transform: translateY(-1px);
+}
+
+/* Disabled & Loading state */
+.hrms-btn:disabled,
+.hrms-btn-disabled,
+.hrms-btn-loading {
+  opacity: 0.65;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.hrms-btn-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Spinner for Loading State */
+.hrms-btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: hrms-btn-spin 0.75s linear infinite;
+}
+
+@keyframes hrms-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

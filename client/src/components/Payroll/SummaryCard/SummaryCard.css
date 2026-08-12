@@ -1,0 +1,103 @@
+.summary-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* Equal height cards */
+  height: 100%;
+  box-sizing: border-box;
+  /* Prevent content from blowing out the grid */
+  min-width: 0;
+  overflow: hidden;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.summary-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /* let content shrink but not overflow */
+  min-width: 0;
+  flex: 1;
+}
+
+.summary-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  /* Prevent title from overflowing */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summary-card-value {
+  /* Responsive font size — smaller for currency-heavy cards */
+  font-size: clamp(0.95rem, 1.5vw, 1.25rem);
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+  /* Truncate overflowing text with ellipsis — full value is in title tooltip */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.summary-card-subtitle {
+  font-size: 11px;
+  color: #94a3b8;
+  /* Truncate long subtitle gracefully */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summary-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+/* Color Variants */
+.summary-card-primary .summary-card-icon {
+  background: #f5f4fb;
+  color: #6c5ce7;
+}
+
+.summary-card-success .summary-card-icon {
+  background: #ecfdf5;
+  color: #10b981;
+}
+
+.summary-card-warning .summary-card-icon {
+  background: #fffbeb;
+  color: #f59e0b;
+}
+
+.summary-card-danger .summary-card-icon {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.summary-card-info .summary-card-icon {
+  background: #e0f2fe;
+  color: #0284c7;
+}

@@ -1,0 +1,13 @@
+.department-report-page {
+  width: 100%;
+}
+
+.badge-department {
+  background: #f3e8ff;
+  color: #6b21a8;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
