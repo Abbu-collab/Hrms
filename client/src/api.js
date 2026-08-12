@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://hrms-1-k152.onrender.com/api';
 
 export const registerUser = async (userData) => {
   const response = await fetch(`${API_URL}/newEmp`, {

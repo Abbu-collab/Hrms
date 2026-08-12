@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/leave";
+const API_URL = "https://hrms-1-k152.onrender.com/api/leave";
 
 
 // JWT Authorization Header
