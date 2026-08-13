@@ -14,7 +14,7 @@ const getAuthHeaders = () => {
 const handleResponse = async (res) => {
   const text = await res.text();
 
-  let data;
+  let data = null;
 
   try {
     data = text ? JSON.parse(text) : null;

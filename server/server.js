@@ -28,9 +28,9 @@ import {
 
 const app = express();
 
-/* =========================
+/* =========================================================
    CORS CONFIGURATION
-========================= */
+========================================================= */
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -41,81 +41,118 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests without an origin
-      // such as Postman/server-to-server requests
+      // Allow requests with no origin
+      // Example: Postman, server-to-server requests
       if (!origin) {
         return callback(null, true);
       }
 
-      if (allowedOrigins.includes(origin)) {
+      // Remove trailing slash if present
+      const normalizedOrigin = origin.replace(/\/$/, "");
+
+      if (allowedOrigins.includes(normalizedOrigin)) {
         return callback(null, true);
       }
+
+      console.error(
+        `CORS blocked request from origin: ${origin}`
+      );
 
       return callback(
         new Error(`CORS policy: Origin ${origin} is not allowed`)
       );
     },
+
     credentials: true,
   })
 );
 
-/* =========================
-   MIDDLEWARE
-========================= */
+/* =========================================================
+   GLOBAL MIDDLEWARE
+========================================================= */
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-/* =========================
-   DATABASE
-========================= */
+/* =========================================================
+   DATABASE CONNECTION
+========================================================= */
 
 connectDB();
 
-/* =========================
+/* =========================================================
    ROOT / HEALTH CHECK
-========================= */
+========================================================= */
 
 app.get("/", (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
     message: "HRMS API Server is Running",
   });
 });
 
-/* =========================
+/* =========================================================
    API ROUTES
-========================= */
+========================================================= */
 
+// Authentication / User
 app.use("/api", route);
 
+// Department Management
 app.use("/api/departments", departmentRoutes);
+
+// Role Management
 app.use("/api/roles", roleRoutes);
+
+// Employee Management
 app.use("/api/employees", employeeRoutes);
+
+// Attendance Management
 app.use("/api/attendance", attendanceRoutes);
+
+// Leave Management
 app.use("/api/leave", leaveRoutes);
+
+// Leave Balance
 app.use("/api/leave-balance", leaveBalanceRoutes);
+
+// Payslip Management
 app.use("/api/payslips", payslipRoutes);
+
+// Reports
 app.use("/api/reports", reportRoutes);
+
+// Analytics
 app.use("/api/analytics", analyticsRoutes);
+
+// Salary Management
 app.use("/api/salaries", salaryRoutes);
+
+// Payroll Management
 app.use("/api/payrolls", payrollRoutes);
+
+// Notifications
 app.use("/api/notifications", notificationRoutes);
 
-/* =========================
-   ERROR HANDLERS
-========================= */
+/* =========================================================
+   404 HANDLER
+========================================================= */
 
 app.use(notFoundHandler);
+
+/* =========================================================
+   GLOBAL ERROR HANDLER
+========================================================= */
+
 app.use(errorHandler);
 
-/* =========================
-   SERVER
-========================= */
+/* =========================================================
+   START SERVER
+========================================================= */
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`HRMS Server running on port ${PORT}`);
 });
