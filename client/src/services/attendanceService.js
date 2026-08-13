@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "https://hrms-1-k152.onrender.com/api/attendance";
+const API = "https://hrms-6k8j.onrender.com/api/attendance";
 
 const getAuthConfig = () => {
   const token = localStorage.getItem("token");

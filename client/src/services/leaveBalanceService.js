@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://hrms-1-k152.onrender.com/api/leave-balance";
+const API_URL = "https://hrms-6k8j.onrender.com/api/leave-balance";
 
 // JWT Authorization Header
 const getAuthHeader = () => {

@@ -1,4 +1,4 @@
-const API_URL = 'https://hrms-1-k152.onrender.com/api';
+const API_URL = 'https://hrms-6k8j.onrender.com/api';
 
 const parseJsonSafely = async (res) => {
   const text = await res.text();
