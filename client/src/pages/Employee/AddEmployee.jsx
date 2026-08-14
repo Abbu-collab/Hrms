@@ -11,7 +11,7 @@ import { FiArrowLeft } from "react-icons/fi";
 
 async function fetchUsers() {
   const token = localStorage.getItem("token");
-  const res = await fetch("/api/users", {
+  const res = await fetch("https://hrms-6k8j.onrender.com/api/users", {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
