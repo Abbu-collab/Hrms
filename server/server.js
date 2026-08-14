@@ -35,19 +35,25 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
+
+  // Old Vercel deployment
   "https://hrms-gamma-navy.vercel.app",
+
+  // Production domain
+  "https://team2026.online",
+  "https://www.team2026.online",
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin
-      // Example: Postman, server-to-server requests
+      // Allow requests without an Origin header.
+      // Example: Postman or server-to-server requests.
       if (!origin) {
         return callback(null, true);
       }
 
-      // Remove trailing slash if present
+      // Remove trailing slash if present.
       const normalizedOrigin = origin.replace(/\/$/, "");
 
       if (allowedOrigins.includes(normalizedOrigin)) {
@@ -59,7 +65,9 @@ app.use(
       );
 
       return callback(
-        new Error(`CORS policy: Origin ${origin} is not allowed`)
+        new Error(
+          `CORS policy: Origin ${origin} is not allowed`
+        )
       );
     },
 
