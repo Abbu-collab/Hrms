@@ -255,7 +255,7 @@ export const EmpOtp = async (req, res) => {
 
         // Send OTP using Resend
         const { data, error } = await transporter.emails.send({
-            from: "HRMS <onboarding@resend.dev>",
+            from: "HRMS Team <noreply@team2026.online>",
             to: [normalizedEmail],
             subject: "HRMS Password Reset OTP",
             html: `
@@ -343,7 +343,7 @@ export const verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
     const otpdata = await FORGOT.findOne({ email, otp });
     if (!otpdata) {
-      return res.status(404).json({ success: true, message: "Invalid OTP" });
+      return res.status(404).json({ success: false, message: "Invalid OTP" });
     }
     if (otpdata.otpExpiry < Date.now()) {
       return res.status(400).json({ success: false, message: "OTP Expired" });

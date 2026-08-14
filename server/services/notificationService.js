@@ -49,7 +49,7 @@ export const sendLeaveEmail = async ({
             "sendLeaveEmail: RESEND_API_KEY is not configured."
         );
 
-        return;
+        return null;
     }
 
     if (!to) {
@@ -58,7 +58,7 @@ export const sendLeaveEmail = async ({
             "sendLeaveEmail: recipient email is missing."
         );
 
-        return;
+        return null;
     }
 
     try {
@@ -66,7 +66,7 @@ export const sendLeaveEmail = async ({
         const { data, error } =
             await resend.emails.send({
 
-                from: "HRMS Notifications <onboarding@resend.dev>",
+                from: "HRMS Notifications <noreply@team2026.online>",
 
                 to: [to],
 
@@ -82,7 +82,7 @@ export const sendLeaveEmail = async ({
                 error
             );
 
-            return;
+            return null;
         }
 
         console.log(
@@ -90,11 +90,15 @@ export const sendLeaveEmail = async ({
             data
         );
 
+        return data;
+
     } catch (err) {
 
         console.error(
             "sendLeaveEmail error:",
             err.message
         );
+
+        return null;
     }
 };
