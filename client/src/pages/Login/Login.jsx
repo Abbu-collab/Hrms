@@ -19,100 +19,194 @@ function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { showToast } = useToast();
+
+  // Reference for Google's actual rendered button
   const googleButtonRef = useRef(null);
 
-
+  /*
+   * GOOGLE SIGN-IN
+   */
   useEffect(() => {
     const scriptId = 'google-identity-script';
 
     const initializeGoogleSignIn = () => {
-      if (window.google && window.google.accounts && window.google.accounts.id) {
-        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+      if (
+        !window.google ||
+        !window.google.accounts ||
+        !window.google.accounts.id
+      ) {
+        console.error('Google Identity Services is not available');
+        return;
+      }
 
-        if (!clientId) {
-          console.error('VITE_GOOGLE_CLIENT_ID is missing - check client/.env');
-          return;
-        }
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-        window.google.accounts.id.initialize({
-          client_id: clientId,
-          callback: handleGoogleResponse
-        });
+      console.log('Google Client ID:', clientId);
+      console.log('Current Origin:', window.location.origin);
 
-        if (googleButtonRef.current) {
-          window.google.accounts.id.renderButton(googleButtonRef.current, {
+      if (!clientId) {
+        console.error(
+          'VITE_GOOGLE_CLIENT_ID is missing - check Vercel Environment Variables'
+        );
+        return;
+      }
+
+      /*
+       * Initialize Google Identity Services
+       */
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: handleGoogleResponse,
+      });
+
+      /*
+       * Render Google's official Sign in with Google button
+       */
+      if (googleButtonRef.current) {
+        // Clear any previously rendered button
+        googleButtonRef.current.innerHTML = '';
+
+        window.google.accounts.id.renderButton(
+          googleButtonRef.current,
+          {
             theme: 'outline',
             size: 'large',
-            width: 300
-          });
-        }
+            width: 300,
+            text: 'signin_with',
+            shape: 'rectangular',
+          }
+        );
       }
     };
 
-    if (document.getElementById(scriptId)) {
-      initializeGoogleSignIn();
-      return;
+    /*
+     * If Google script is already loaded
+     */
+    const existingScript = document.getElementById(scriptId);
+
+    if (existingScript) {
+      if (
+        window.google &&
+        window.google.accounts &&
+        window.google.accounts.id
+      ) {
+        initializeGoogleSignIn();
+      } else {
+        existingScript.addEventListener(
+          'load',
+          initializeGoogleSignIn,
+          { once: true }
+        );
+      }
+
+      return () => {
+        existingScript.removeEventListener(
+          'load',
+          initializeGoogleSignIn
+        );
+      };
     }
 
+    /*
+     * Load Google Identity Services script
+     */
     const script = document.createElement('script');
+
     script.id = scriptId;
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
     script.defer = true;
+
     script.onload = initializeGoogleSignIn;
+
+    script.onerror = () => {
+      console.error('Failed to load Google Identity Services');
+      showToast(
+        'error',
+        'Unable to load Google Sign-In'
+      );
+    };
+
     document.body.appendChild(script);
+
+    return () => {
+      script.onload = null;
+      script.onerror = null;
+    };
   }, []);
 
+  /*
+   * GOOGLE RESPONSE
+   */
   const handleGoogleResponse = async (response) => {
     try {
+      if (!response || !response.credential) {
+        showToast(
+          'error',
+          'Google authentication failed. Please try again.'
+        );
+        return;
+      }
+
       setLoading(true);
 
+      console.log('Google credential received successfully');
+
+      /*
+       * Send Google ID token to backend
+       */
       const data = await googleLoginUser(response.credential);
 
+      /*
+       * Store authenticated user
+       */
       login({
         user: data.user,
-        token: data.token
+        token: data.token,
       });
 
-      showToast('success', 'Google login successful');
+      showToast(
+        'success',
+        'Google login successful'
+      );
 
+      /*
+       * Navigate to dashboard
+       */
       setTimeout(() => {
         navigate('/dashboard');
       }, 1200);
+
     } catch (error) {
       console.error('Google login error:', error);
 
-      const errorMessage = error?.message?.toLowerCase() || '';
+      const errorMessage =
+        error?.message?.toLowerCase() || '';
 
       if (
         errorMessage.includes('failed to fetch') ||
         errorMessage.includes('network error') ||
         errorMessage.includes('networkerror')
       ) {
-        showToast('error', 'Unable to connect to server');
+        showToast(
+          'error',
+          'Unable to connect to server'
+        );
       } else {
-        showToast('error', error?.message || 'Google login failed');
+        showToast(
+          'error',
+          error?.message || 'Google login failed'
+        );
       }
+
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleClick = () => {
-    const realGoogleButton = googleButtonRef.current
-      ? googleButtonRef.current.querySelector('div[role="button"]')
-      : null;
-
-    if (realGoogleButton) {
-      realGoogleButton.click();
-    } else {
-      showToast(
-        'error',
-        'Google Sign-In is still loading. Please try again.'
-      );
-    }
-  };
-
+  /*
+   * PASSKEY
+   */
   const openPasskeyModal = () => {
     setShowPasskeyModal(true);
   };
@@ -122,19 +216,32 @@ function Login() {
   };
 
   const handlePasskeySuccess = () => {
-  
-    sessionStorage.setItem('passkeyVerified', 'true');
+    sessionStorage.setItem(
+      'passkeyVerified',
+      'true'
+    );
 
     setShowPasskeyModal(false);
-    showToast('success', 'Passkey verified');
+
+    showToast(
+      'success',
+      'Passkey verified'
+    );
+
     navigate('/register');
   };
 
+  /*
+   * NORMAL EMAIL/PASSWORD LOGIN
+   */
   const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!email.trim() || !password) {
-      showToast('error', 'Please enter email and password');
+      showToast(
+        'error',
+        'Please enter email and password'
+      );
       return;
     }
 
@@ -143,38 +250,55 @@ function Login() {
 
       const data = await loginUser({
         email: email.trim(),
-        password
+        password,
       });
 
       login({
         user: data.user,
-        token: data.token
+        token: data.token,
       });
 
-      showToast('success', 'Login successful');
+      showToast(
+        'success',
+        'Login successful'
+      );
 
       setTimeout(() => {
         navigate('/dashboard');
       }, 1200);
+
     } catch (error) {
       console.error('Login error:', error);
 
-      const errorMessage = error?.message?.toLowerCase() || '';
+      const errorMessage =
+        error?.message?.toLowerCase() || '';
 
       if (
         errorMessage.includes('invalid email or password') ||
         errorMessage.includes('incorrect email or password')
       ) {
-        showToast('error', 'Incorrect email or password');
+        showToast(
+          'error',
+          'Incorrect email or password'
+        );
+
       } else if (
         errorMessage.includes('failed to fetch') ||
         errorMessage.includes('network error') ||
         errorMessage.includes('networkerror')
       ) {
-        showToast('error', 'Unable to connect to server');
+        showToast(
+          'error',
+          'Unable to connect to server'
+        );
+
       } else {
-        showToast('error', error?.message || 'Login failed');
+        showToast(
+          'error',
+          error?.message || 'Login failed'
+        );
       }
+
     } finally {
       setLoading(false);
     }
@@ -182,7 +306,10 @@ function Login() {
 
   return (
     <div className="login-container">
+
+      {/* LEFT SIDE */}
       <div className="login-left">
+
         <div className="brand-section">
 
           <img
@@ -194,13 +321,19 @@ function Login() {
           <h1>Infinetra HRMS</h1>
 
           <p className="brand-description">
-            Elevating productivity through intelligent employee management and seamless human resource workflows.
+            Elevating productivity through intelligent employee
+            management and seamless human resource workflows.
           </p>
 
           <div className="feature-cards">
 
+            {/* FEATURE 1 */}
             <div className="feature-card">
-              <span className="feature-icon" aria-hidden="true">
+
+              <span
+                className="feature-icon"
+                aria-hidden="true"
+              >
                 <svg
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -208,19 +341,57 @@ function Login() {
                   height="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <rect x="2" y="2" width="6" height="6" rx="1" />
-                  <rect x="12" y="2" width="6" height="6" rx="1" />
-                  <rect x="2" y="12" width="6" height="6" rx="1" />
-                  <rect x="12" y="12" width="6" height="6" rx="1" />
+                  <rect
+                    x="2"
+                    y="2"
+                    width="6"
+                    height="6"
+                    rx="1"
+                  />
+
+                  <rect
+                    x="12"
+                    y="2"
+                    width="6"
+                    height="6"
+                    rx="1"
+                  />
+
+                  <rect
+                    x="2"
+                    y="12"
+                    width="6"
+                    height="6"
+                    rx="1"
+                  />
+
+                  <rect
+                    x="12"
+                    y="12"
+                    width="6"
+                    height="6"
+                    rx="1"
+                  />
                 </svg>
               </span>
 
-              <h4>Unified Dashboard</h4>
-              <p>Real-time metrics at your fingertips.</p>
+              <h4>
+                Unified Dashboard
+              </h4>
+
+              <p>
+                Real-time metrics at your fingertips.
+              </p>
+
             </div>
 
+            {/* FEATURE 2 */}
             <div className="feature-card">
-              <span className="feature-icon" aria-hidden="true">
+
+              <span
+                className="feature-icon"
+                aria-hidden="true"
+              >
                 <svg
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -243,118 +414,185 @@ function Login() {
                 </svg>
               </span>
 
-              <h4>Secure Access</h4>
-              <p>Enterprise-grade data protection.</p>
+              <h4>
+                Secure Access
+              </h4>
+
+              <p>
+                Enterprise-grade data protection.
+              </p>
+
             </div>
 
           </div>
+
         </div>
+
       </div>
 
+
+      {/* RIGHT SIDE */}
       <div className="login-right">
+
         <div className="login-form-box">
 
-          {/* Mobile-only logo header */}
+          {/* Mobile-only logo */}
           <div className="mobile-logo-header">
-            <img src={logo} alt="Infinetra Logo" className="mobile-logo" />
-            <span className="mobile-brand-name">Infinetra HRMS</span>
+
+            <img
+              src={logo}
+              alt="Infinetra Logo"
+              className="mobile-logo"
+            />
+
+            <span className="mobile-brand-name">
+              Infinetra HRMS
+            </span>
+
           </div>
 
-          <h2>Welcome back</h2>
+
+          <h2>
+            Welcome back
+          </h2>
 
           <p className="subtitle">
             Sign in to continue to your dashboard.
           </p>
 
+
+          {/* EMAIL/PASSWORD FORM */}
           <form onSubmit={handleLogin}>
 
+            {/* EMAIL */}
             <div className="form-group">
-              <label>Email Address</label>
+
+              <label>
+                Email Address
+              </label>
 
               <input
                 type="email"
                 placeholder="name@company.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
               />
+
             </div>
 
+
+            {/* PASSWORD */}
             <div className="form-group">
-              <label>Password</label>
+
+              <label>
+                Password
+              </label>
 
               <div className="password-wrapper">
 
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={
+                    showPassword
+                      ? 'text'
+                      : 'password'
+                  }
                   placeholder="Enter password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
                 />
 
                 <button
                   type="button"
                   className="password-toggle-btn"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  title={showPassword ? "Hide password" : "Show password"}
+                  onClick={() =>
+                    setShowPassword(
+                      (prev) => !prev
+                    )
+                  }
+                  aria-label={
+                    showPassword
+                      ? "Hide password"
+                      : "Show password"
+                  }
+                  title={
+                    showPassword
+                      ? "Hide password"
+                      : "Show password"
+                  }
                 >
-                  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                  {
+                    showPassword
+                      ? <FiEyeOff size={18} />
+                      : <FiEye size={18} />
+                  }
                 </button>
 
               </div>
+
             </div>
 
 
+            {/* FORGOT PASSWORD */}
             <div className="form-row">
 
-
               <div>
+
                 <Link
                   to="/forgot-password"
                   className="link"
                 >
                   Forgot Password?
                 </Link>
+
               </div>
 
             </div>
 
+
+            {/* NORMAL LOGIN */}
             <button
               type="submit"
               className="btn-primary"
               disabled={loading}
             >
-              {loading ? 'Signing In...' : 'Sign In'}
+              {
+                loading
+                  ? 'Signing In...'
+                  : 'Sign In'
+              }
             </button>
 
+
+            {/* DIVIDER */}
             <div className="divider">
+
               <span></span>
-              <p>OR</p>
+
+              <p>
+                OR
+              </p>
+
               <span></span>
+
             </div>
 
+
+            {/* GOOGLE SIGN-IN */}
             <div
               ref={googleButtonRef}
-              style={{
-                position: 'absolute',
-                top: '-9999px',
-                left: '-9999px'
-              }}
+              className="google-button-container"
             ></div>
-
-            <button
-              type="button"
-              className="btn-google"
-              onClick={handleGoogleClick}
-              disabled={loading}
-            >
-              <span className="google-icon">G</span>
-              &nbsp;&nbsp;Sign in with Google
-            </button>
 
           </form>
 
+
+          {/* REGISTER */}
           <p className="register-text">
+
             New to Infinetra?{' '}
 
             <button
@@ -364,24 +602,30 @@ function Login() {
             >
               Register now
             </button>
+
           </p>
 
+
+          {/* POWERED BY */}
           <p className="powered-by">
             POWERED BY INFINETRA TECH
           </p>
 
         </div>
+
       </div>
 
+
+      {/* PASSKEY MODAL */}
       {showPasskeyModal && (
         <Passkey
           onClose={closePasskeyModal}
           onSuccess={handlePasskeySuccess}
         />
       )}
+
     </div>
   );
 }
 
 export default Login;
-

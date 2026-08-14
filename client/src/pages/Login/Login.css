@@ -534,6 +534,15 @@ html:has(.login-container) {
   overflow-wrap: anywhere;
 }
 
+.google-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 10px;
+}
+
 
 /* ──────────────────────────────────────
    RESPONSIVE — tablet & mobile
