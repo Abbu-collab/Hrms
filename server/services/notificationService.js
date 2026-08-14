@@ -1,39 +1,100 @@
 import Notification from "../models/Notification.js";
-import transporter from "../config/mail.js";
+import resend from "../config/mail.js";
 
 /**
- * Create a new in-app notification for a specific recipient.
+ * Create a new in-app notification
+ * for a specific recipient.
  */
-export const createNotification = async ({ recipient, type, message, relatedLeave = null }) => {
-  try {
-    const notif = await Notification.create({ recipient, type, message, relatedLeave });
-    return notif;
-  } catch (err) {
-    console.error("createNotification error:", err.message);
-    return null;
-  }
+export const createNotification = async ({
+    recipient,
+    type,
+    message,
+    relatedLeave = null
+}) => {
+    try {
+
+        const notif = await Notification.create({
+            recipient,
+            type,
+            message,
+            relatedLeave
+        });
+
+        return notif;
+
+    } catch (err) {
+
+        console.error(
+            "createNotification error:",
+            err.message
+        );
+
+        return null;
+    }
 };
 
-/**
- * Send an email using the existing Nodemailer transporter.
- * Fails silently if credentials are not configured — does NOT throw.
- */
-export const sendLeaveEmail = async ({ to, subject, html }) => {
-  if (!process.env.EMAIL || !process.env.EMAIL_PASS) {
-    // Email credentials not configured — skip silently
-    console.warn("sendLeaveEmail: EMAIL credentials not set in .env — skipping email.");
-    return;
-  }
 
-  try {
-    await transporter.sendMail({
-      from: `HRMS Notifications <${process.env.EMAIL}>`,
-      to,
-      subject,
-      html,
-    });
-  } catch (err) {
-    // Non-fatal — log but don't crash the main request
-    console.error("sendLeaveEmail error:", err.message);
-  }
+/**
+ * Send leave notification email using Resend.
+ */
+export const sendLeaveEmail = async ({
+    to,
+    subject,
+    html
+}) => {
+
+    if (!process.env.RESEND_API_KEY) {
+
+        console.warn(
+            "sendLeaveEmail: RESEND_API_KEY is not configured."
+        );
+
+        return;
+    }
+
+    if (!to) {
+
+        console.warn(
+            "sendLeaveEmail: recipient email is missing."
+        );
+
+        return;
+    }
+
+    try {
+
+        const { data, error } =
+            await resend.emails.send({
+
+                from: "HRMS Notifications <onboarding@resend.dev>",
+
+                to: [to],
+
+                subject,
+
+                html
+            });
+
+        if (error) {
+
+            console.error(
+                "Resend leave email error:",
+                error
+            );
+
+            return;
+        }
+
+        console.log(
+            "Leave email sent successfully:",
+            data
+        );
+
+    } catch (err) {
+
+        console.error(
+            "sendLeaveEmail error:",
+            err.message
+        );
+    }
 };
