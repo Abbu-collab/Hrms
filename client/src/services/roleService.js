@@ -1,4 +1,4 @@
-const API_BASE = "/api/roles";
+const API_BASE = "https://hrms-6k8j.onrender.com/api/roles";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");

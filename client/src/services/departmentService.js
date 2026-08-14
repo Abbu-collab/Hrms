@@ -1,4 +1,4 @@
-const API_BASE = "/api/departments";
+const API_BASE = "https://hrms-6k8j.onrender.com/api/departments";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
