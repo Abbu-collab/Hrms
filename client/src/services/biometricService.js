@@ -1,11 +1,12 @@
 import axios from "axios";
 
 const getApiBase = () => {
-  if (import.meta.env.VITE_API_URL) {
-    return `${import.meta.env.VITE_API_URL}/biometric`;
-  }
-  if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-    return "/api/biometric";
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) {
+    const cleanEnv = envUrl.replace(/\/$/, "");
+    return cleanEnv.endsWith("/api")
+      ? `${cleanEnv}/biometric`
+      : `${cleanEnv}/api/biometric`;
   }
   return "https://hrms-6k8j.onrender.com/api/biometric";
 };
