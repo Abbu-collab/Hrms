@@ -20,6 +20,7 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 import salaryRoutes from "./routes/salaryRoutes.js";
 import payrollRoutes from "./routes/payrollRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import biometricRoutes from "./routes/biometricRoutes.js";
 
 import {
   errorHandler,
@@ -142,6 +143,9 @@ app.use("/api/payrolls", payrollRoutes);
 
 // Notifications
 app.use("/api/notifications", notificationRoutes);
+
+// Biometric Management
+app.use("/api/biometric", biometricRoutes);
 
 /* =========================================================
    404 HANDLER

@@ -99,14 +99,16 @@ export default function AdminAttendanceMonitor({ records = [], loading, error, o
       r.status || "—",
       fmtTime(r.checkIn),
       fmtTime(r.checkOut),
+      r.checkInMethod === "FACE" || r.checkOutMethod === "FACE" ? "Face" : "Manual",
+      r.livenessVerified ? "Verified" : "—",
       fmtHours(r.workingHours),
     ]);
 
     autoTable(doc, {
-      head: [["Employee", "Role", "Department", "Date", "Status", "Check In", "Check Out", "Working Hrs"]],
+      head: [["Employee", "Role", "Department", "Date", "Status", "Check In", "Check Out", "Method", "Liveness", "Working Hrs"]],
       body: rows,
       startY: 50,
-      styles: { fontSize: 9 },
+      styles: { fontSize: 8 },
       headStyles: { fillColor: [25, 118, 210] },
     });
 
@@ -222,6 +224,8 @@ export default function AdminAttendanceMonitor({ records = [], loading, error, o
                   <th>Status</th>
                   <th>Check In</th>
                   <th>Check Out</th>
+                  <th>Method</th>
+                  <th>Liveness</th>
                   <th>Working Hrs</th>
                   <th>Remarks</th>
                 </tr>
@@ -245,6 +249,18 @@ export default function AdminAttendanceMonitor({ records = [], loading, error, o
                     <td><StatusBadge status={r.status} /></td>
                     <td>{fmtTime(r.checkIn)}</td>
                     <td>{fmtTime(r.checkOut)}</td>
+                    <td>
+                      <span className={`att-badge ${r.checkInMethod === "FACE" || r.checkOutMethod === "FACE" ? "att-badge-present" : "att-badge-default"}`} style={{ fontSize: "0.72rem", padding: "2px 8px" }}>
+                        {r.checkInMethod === "FACE" || r.checkOutMethod === "FACE" ? "Face 👤" : "Manual 📝"}
+                      </span>
+                    </td>
+                    <td>
+                      {r.livenessVerified ? (
+                        <span style={{ color: "#16a34a", fontWeight: "600", fontSize: "0.78rem" }}>Verified ✓</span>
+                      ) : (
+                        <span style={{ color: "#94a3b8", fontSize: "0.78rem" }}>—</span>
+                      )}
+                    </td>
                     <td>{fmtHours(r.workingHours)}</td>
                     <td className="att-remarks">{r.remarks || "—"}</td>
                   </tr>

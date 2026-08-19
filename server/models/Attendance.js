@@ -51,6 +51,28 @@ const attendanceSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+
+    checkInMethod: {
+      type: String,
+      enum: ["MANUAL", "FACE"],
+      default: "MANUAL",
+    },
+
+    checkOutMethod: {
+      type: String,
+      enum: ["MANUAL", "FACE"],
+      default: "MANUAL",
+    },
+
+    livenessVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    biometricVerifiedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

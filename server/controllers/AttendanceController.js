@@ -20,12 +20,13 @@ export const checkIn = async (req, res) => {
       throw new Error("User authentication failed.");
     }
 
-    const { location, remarks } = req.body;
+    const { location, remarks, biometricToken } = req.body;
 
     const attendance = await checkInService({
       employeeId,
       location,
       remarks,
+      biometricToken,
     });
 
     res.status(201).json({
@@ -53,7 +54,9 @@ export const checkOut = async (req, res) => {
       throw new Error("User authentication failed.");
     }
 
-    const attendance = await checkOutService(employeeId);
+    const { biometricToken } = req.body || {};
+
+    const attendance = await checkOutService(employeeId, biometricToken);
 
     res.status(200).json({
       success: true,

@@ -1,9 +1,10 @@
+import jwt from "jsonwebtoken";
 import Attendance from "../models/Attendance.js";
 
 
 // ================= CHECK IN SERVICE =================
 
-export const checkInService = async ({ employeeId, location, remarks }) => {
+export const checkInService = async ({ employeeId, location, remarks, biometricToken }) => {
 
   const today = new Date();
 
@@ -13,8 +14,6 @@ export const checkInService = async ({ employeeId, location, remarks }) => {
   const endOfDay = new Date(today);
   endOfDay.setHours(23, 59, 59, 999);
 
-
-
   const existingAttendance = await Attendance.findOne({
     employeeId,
     date: {
@@ -23,114 +22,102 @@ export const checkInService = async ({ employeeId, location, remarks }) => {
     }
   });
 
-
-
   if (existingAttendance) {
     throw new Error("Employee already checked in today.");
   }
 
+  // Verify biometric verification token if provided
+  let checkInMethod = "MANUAL";
+  let livenessVerified = false;
+  let biometricVerifiedAt = null;
 
+  if (biometricToken) {
+    try {
+      const decoded = jwt.verify(biometricToken, process.env.JWT_SECRET);
+      if (String(decoded.userId) !== String(employeeId) || decoded.purpose !== "biometric_attendance") {
+        throw new Error("Biometric token does not match authenticated user.");
+      }
+      checkInMethod = "FACE";
+      livenessVerified = true;
+      biometricVerifiedAt = new Date(decoded.verifiedAt || Date.now());
+    } catch (err) {
+      throw new Error(err.message || "Invalid or expired biometric token. Please re-verify your face.");
+    }
+  }
 
   // Late after 9:30 AM
-
   const officeTime = new Date(today);
   officeTime.setHours(9, 30, 0, 0);
 
-
-
   let status = "Present";
-
 
   if (today > officeTime) {
     status = "Late";
   }
 
-
-
-
   const attendance = await Attendance.create({
-
-  employeeId,
-
-  date: today,
-
-  checkIn: today,
-
-  location,
-
-  remarks: status === "Late"
-    ? "Late check in"
-    : "Checked in on time",
-
-  status
-
-});
-
+    employeeId,
+    date: today,
+    checkIn: today,
+    location,
+    remarks: remarks || (status === "Late" ? "Late check in" : "Checked in on time"),
+    status,
+    checkInMethod,
+    livenessVerified,
+    biometricVerifiedAt,
+  });
 
   return attendance;
-
 };
-
-
-
-
-
 
 
 // ================= CHECK OUT SERVICE =================
 
-export const checkOutService = async (employeeId) => {
-
+export const checkOutService = async (employeeId, biometricToken) => {
 
   const today = new Date();
-
-
 
   const startOfDay = new Date(today);
   startOfDay.setHours(0,0,0,0);
 
-
-
   const endOfDay = new Date(today);
   endOfDay.setHours(23,59,59,999);
 
-
-
-
   const attendance = await Attendance.findOne({
-
     employeeId,
-
     date:{
       $gte:startOfDay,
       $lte:endOfDay
     }
-
   });
 
-
-
-
   if(!attendance){
-
     throw new Error("Check In not found for today.");
-
   }
-
-
-
 
   if(attendance.checkOut){
-
     throw new Error("Employee already checked out.");
-
   }
 
+  // Verify biometric token for check out if provided
+  let checkOutMethod = "MANUAL";
 
-
-
+  if (biometricToken) {
+    try {
+      const decoded = jwt.verify(biometricToken, process.env.JWT_SECRET);
+      if (String(decoded.userId) !== String(employeeId) || decoded.purpose !== "biometric_attendance") {
+        throw new Error("Biometric token does not match authenticated user.");
+      }
+      checkOutMethod = "FACE";
+      attendance.livenessVerified = true;
+      attendance.biometricVerifiedAt = new Date(decoded.verifiedAt || Date.now());
+    } catch (err) {
+      throw new Error(err.message || "Invalid or expired biometric token. Please re-verify your face.");
+    }
+  }
 
   attendance.checkOut = today;
+  attendance.checkOutMethod = checkOutMethod;
 
 
 

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { getProfile, updateProfile } from "../../services/api";
+import { getBiometricStatus } from "../../services/biometricService";
+import BiometricEnrollmentModal from "../../components/Biometric/BiometricEnrollmentModal";
 import { useAuth } from "../../context/AuthContext";
-import { FiEdit2, FiArrowLeft, FiUser, FiMail, FiPhone, FiBriefcase, FiShield, FiCheckCircle } from "react-icons/fi";
+import { FiEdit2, FiArrowLeft, FiUser, FiMail, FiPhone, FiBriefcase, FiShield, FiCheckCircle, FiSmile } from "react-icons/fi";
 import "../../components/employee/emp.shared.css";
 import "./Profile.css";
 
@@ -23,7 +25,22 @@ function Profile() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [biometricInfo, setBiometricInfo] = useState(null);
+  const [enrollModalOpen, setEnrollModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  const fetchBiometricStatus = async () => {
+    try {
+      const bioRes = await getBiometricStatus();
+      setBiometricInfo(bioRes.data);
+    } catch (e) {
+      console.warn("Failed to load biometric status:", e);
+    }
+  };
+
+  useEffect(() => {
+    fetchBiometricStatus();
+  }, []);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -329,10 +346,41 @@ function Profile() {
                   <strong className="profile-info-value">{role}</strong>
                 </div>
               </div>
+
+              <div className="profile-info-item" style={{ gridColumn: "1 / -1", marginTop: 8, background: "#f8fafc", padding: 16, borderRadius: 12, border: "1px solid #e2e8f0" }}>
+                <div className="profile-info-icon" style={{ background: "#e0f2fe", color: "#0284c7" }}><FiSmile size={20} /></div>
+                <div className="profile-info-content" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                  <div>
+                    <span className="profile-info-label" style={{ fontSize: "0.85rem", color: "#475569" }}>Face Biometric Attendance</span>
+                    <strong className="profile-info-value" style={{ display: "block", color: biometricInfo?.isRegistered ? "#15803d" : "#dc2626", marginTop: 2 }}>
+                      {biometricInfo?.isRegistered ? "Status: Registered ✓" : "Status: Not Registered"}
+                    </strong>
+                    {biometricInfo?.enrolledAt && (
+                      <span style={{ fontSize: "0.78rem", color: "#64748b", display: "block", marginTop: 2 }}>
+                        Registered on: {new Date(biometricInfo.enrolledAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    className="emp-btn-primary"
+                    style={{ fontSize: "0.82rem", padding: "8px 16px" }}
+                    onClick={() => setEnrollModalOpen(true)}
+                  >
+                    {biometricInfo?.isRegistered ? "Re-register Face" : "Register Face"}
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
       </div>
+
+      <BiometricEnrollmentModal
+        isOpen={enrollModalOpen}
+        onClose={() => setEnrollModalOpen(false)}
+        onEnrolled={fetchBiometricStatus}
+      />
     </div>
   );
 }
