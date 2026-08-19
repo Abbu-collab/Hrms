@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
-import logo from "../../assets/infinetra-logo.png";
+import logo from "../../assets/it-spaxios-logo.png";
 import { registerUser, getPublicDepartments, getPublicRoles } from "../../services/api";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Register() {
   const [name, setName] = useState("");
@@ -169,7 +170,7 @@ function Register() {
     }
   };
   return (
-    <div className="login-container">
+    <div className="login-container register-page">
       {toast.show && (
         <div className={`toast-message ${toast.type}`}>
           <div className="toast-icon">
@@ -185,9 +186,9 @@ function Register() {
 
       <div className="login-left">
         <div className="brand-section">
-          <img src={logo} alt="Infinetra Logo" className="logo-image" />
+          <img src={logo} alt="It Spaxios Logo" className="logo-image" />
 
-          <h1>Infinetra HRMS</h1>
+          <h1>IT Spaxios Innovation</h1>
 
           <p className="brand-description">
             Elevating enterprise productivity through intelligent employee
@@ -243,7 +244,7 @@ function Register() {
       <div className="login-right">
         <div className="login-form-box">
           <div className="mobile-logo-header">
-            <img src={logo} alt="Infinetra Logo" className="mobile-logo" />
+            <img src={logo} alt="IT Spaxios Logo" className="mobile-logo" />
           </div>
 
           <h2>Create account</h2>
@@ -347,7 +348,7 @@ function Register() {
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label="Show or hide password"
                 >
-                  {showPassword ? "◉" : "◌"}
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </button>
               </div>
             </div>
@@ -370,7 +371,7 @@ function Register() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   aria-label="Show or hide confirm password"
                 >
-                  {showConfirmPassword ? "◉" : "◌"}
+                  {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                 </button>
               </div>
             </div>
@@ -387,7 +388,7 @@ function Register() {
             </Link>
           </p>
 
-          <p className="powered-by">POWERED BY INFINETRA TECH</p>
+          <p className="powered-by">POWERED BY IT SPAXIOS INNOVATION</p>
         </div>
       </div>
     </div>

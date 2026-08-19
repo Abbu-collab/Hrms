@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { verifyOtpForEmail } from '../../api';
-import logo from '../../assets/infinetra-logo.png';
+import logo from '../../assets/it-spaxios-logo.png';
 import '../ForgotPassword/ForgotPassword.css';
 
 function VerifyOTP() {
@@ -41,10 +41,10 @@ function VerifyOTP() {
         <div className="brand-section">
           <img
             src={logo}
-            alt="Infinetra Logo"
+            alt="It Spaxios Logo"
             className="logo-image"
           />
-          <h1>Infinetra HRMS</h1>
+          <h1>IT SPAXIOS INNOVATION</h1>
           <p className="brand-description">
             Elevating enterprise productivity through intelligent employee management and seamless human resource workflows.
           </p>
@@ -94,7 +94,7 @@ function VerifyOTP() {
       <div className="login-right">
         <div className="login-form-box">
           <div className="mobile-logo-header">
-            <img src={logo} alt="Infinetra Logo" className="mobile-logo" />
+            <img src={logo} alt="IT Spaxios Logo" className="mobile-logo" />
           </div>
 
           <h2>Verify OTP Code</h2>
@@ -138,7 +138,7 @@ function VerifyOTP() {
           </div>
 
           <p className="powered-by">
-            POWERED BY INFINETRA TECH
+            POWERED BY IT SPAXIOS INNOVATION
           </p>
         </div>
       </div>

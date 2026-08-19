@@ -193,7 +193,7 @@ function Profile() {
           <div className="profile-card-header">
             <h2>{isEditing ? "Edit Personal Details" : "Personal Details"}</h2>
             <span className="profile-card-subtitle">
-              {isEditing ? "Update your contact and department details below." : "View your details registered on Infinetra HRMS."}
+              {isEditing ? "Update your contact and department details below." : "View your details registered on IT SPAXIOS INNOVATION."}
             </span>
           </div>
 

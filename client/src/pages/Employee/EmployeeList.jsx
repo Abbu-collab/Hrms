@@ -354,12 +354,7 @@ export default function EmployeeList() {
       )}
 
       <footer className="emp-footer">
-        <div>© 2024 Infinetra HRMS. All rights reserved.</div>
-        <div className="emp-footer-links">
-          <a href="#privacy">Privacy Policy</a>
-          <a href="#status">System Status</a>
-          <span>v2.4.8-release</span>
-        </div>
+        <div>© 2026 IT Spaxios Innovation. All rights reserved.</div>
       </footer>
     </div>
   );

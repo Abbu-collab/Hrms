@@ -11,7 +11,7 @@ export default function Navbar() {
     <header className="navbar">
       <div className="navbar-left">
         <div className="navbar-brand">
-          <strong>Infinetra HRMS</strong>
+          <strong>IT Spaxios Innovation</strong>
           
         </div>
 

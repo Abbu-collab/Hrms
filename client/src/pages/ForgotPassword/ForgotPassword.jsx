@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './ForgotPassword.css';
-import logo from '../../assets/infinetra-logo.png';
+import logo from '../../assets/it-spaxios-logo.png';
 
 import {
   sendOtp,
@@ -147,11 +147,11 @@ function ForgotPassword() {
         <div className="brand-section">
           <img
             src={logo}
-            alt="Infinetra Logo"
+            alt="IT Spaxios Logo"
             className="logo-image"
           />
 
-          <h1>Infinetra HRMS</h1>
+          <h1>IT Spaxios Innovation</h1>
 
           <p className="brand-description">
             Elevating enterprise productivity through intelligent employee
@@ -377,7 +377,7 @@ function ForgotPassword() {
           </div>
 
           <p className="powered-by">
-            POWERED BY INFINETRA TECH
+            POWERED BY IT SPAXIOS INNOVATION
           </p>
 
         </div>

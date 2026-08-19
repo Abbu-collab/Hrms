@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import { useToast } from "../../context/ToastContext.jsx";
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import Passkey from '../Passkey/Passkey.jsx';
-import logo from '../../assets/infinetra-logo.png';
+import logo from '../../assets/it-spaxios-logo.png';
 import './Login.css';
 
 function Login() {
@@ -314,11 +314,11 @@ function Login() {
 
           <img
             src={logo}
-            alt="Infinetra Logo"
+            alt="IT Spaxios Innovation Logo"
             className="logo-image"
           />
 
-          <h1>Infinetra HRMS</h1>
+          <h1>IT SPAXIOS INNOVATION</h1>
 
           <p className="brand-description">
             Elevating productivity through intelligent employee
@@ -441,12 +441,12 @@ function Login() {
 
             <img
               src={logo}
-              alt="Infinetra Logo"
+              alt="It Spaxios Logo"
               className="mobile-logo"
             />
 
             <span className="mobile-brand-name">
-              Infinetra HRMS
+              IT Spaxios Innovation
             </span>
 
           </div>
@@ -593,7 +593,7 @@ function Login() {
           {/* REGISTER */}
           <p className="register-text">
 
-            New to Infinetra?{' '}
+            New to IT Spaxios?{' '}
 
             <button
               type="button"
@@ -608,7 +608,7 @@ function Login() {
 
           {/* POWERED BY */}
           <p className="powered-by">
-            POWERED BY INFINETRA TECH
+            POWERED BY IT SPAXIOS INNOVATION
           </p>
 
         </div>

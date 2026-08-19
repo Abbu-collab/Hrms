@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '../../services/api';
 import './ResetPassword.css';
-import logo from '../../assets/infinetra-logo.png';
+import logo from '../../assets/it-spaxios-logo.png';
 
 function ResetPassword() {
   const { token } = useParams();
@@ -60,11 +60,11 @@ function ResetPassword() {
         <div className="brand-section">
           <img
             src={logo}
-            alt="Infinetra Logo"
+            alt="It Spaxios Logo"
             className="logo-image"
           />
 
-          <h1>Infinetra HRMS</h1>
+          <h1>IT SPAXIOS INNOVATION</h1>
 
           <p className="brand-description">
             Elevating enterprise productivity through intelligent employee

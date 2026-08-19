@@ -5,12 +5,12 @@
 /* Lock body scroll ONLY when register/login page is active */
 body:has(.login-container) {
   overflow: hidden !important;
-  height: 100vh !important;
+  height: 90vh !important;
 }
 
 html:has(.login-container) {
   overflow: hidden !important;
-  height: 100vh !important;
+  height: 90vh !important;
 }
 
 .login-container * {
@@ -25,7 +25,7 @@ html:has(.login-container) {
   right: 0 !important;
   bottom: 0 !important;
   width: 100vw !important;
-  height: 100vh !important;
+  height: 90vh !important;
   display: flex !important;
   overflow: hidden !important;
   background-color: #f8fafc;
@@ -156,7 +156,7 @@ html:has(.login-container) {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  background-color: #f1f5f9;
+  background-color: white;
   overflow-y: auto;
   /* ← ONLY right panel scrolls */
   overflow-x: hidden;
@@ -165,7 +165,8 @@ html:has(.login-container) {
 
   /* Thin scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-color: #3187ef transparent;
+
 }
 
 .login-right::-webkit-scrollbar {
@@ -195,6 +196,17 @@ html:has(.login-container) {
   flex-direction: column;
   align-items: stretch;
   flex-shrink: 0;
+}
+
+.register-container .login-form-box {
+  margin-top: 250px;
+}
+
+/* Desktop Register only */
+@media (min-width: 1025px) {
+  .register-page .login-form-box {
+    margin-top: 250px;
+  }
 }
 
 /* Mobile logo header — shown only on mobile, hidden on desktop */
@@ -235,7 +247,7 @@ html:has(.login-container) {
   color: #0f172a;
   letter-spacing: -0.025em;
   line-height: 1.2;
-  margin: 0 0 4px 0;
+  margin: 20px;
   text-align: left;
 }
 
