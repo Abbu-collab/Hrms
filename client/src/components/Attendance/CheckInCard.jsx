@@ -1,10 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import { checkIn, checkOut } from "../../services/attendanceService";
 import { getBiometricStatus } from "../../services/biometricService";
 import BiometricModal from "../Biometric/BiometricModal";
 import BiometricEnrollmentModal from "../Biometric/BiometricEnrollmentModal";
 import {
-  FiLogIn, FiLogOut, FiClock, FiCheckCircle, FiAlertCircle,
+  FiClock, FiCheckCircle, FiAlertCircle,
   FiCalendar, FiSmile, FiUserCheck, FiShield,
 } from "react-icons/fi";
 
@@ -14,13 +13,11 @@ function CheckInCard({ attendance, setTodayAttendance, loadAttendanceData }) {
   const [checkInTime, setCheckInTime]       = useState(null);
   const [checkOutTime, setCheckOutTime]     = useState(null);
   const [workingSeconds, setWorkingSeconds] = useState(0);
-  const [loading, setLoading]               = useState(false);
   const [message, setMessage]               = useState({ type: "", text: "" });
 
   // Biometric state
   const [isFaceRegistered, setIsFaceRegistered] = useState(false);
   const [biometricModalOpen, setBiometricModalOpen] = useState(false);
-  const [biometricAction, setBiometricAction] = useState("check-in");
   const [enrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
 
   const loadBiometricStatus = useCallback(async () => {
@@ -72,63 +69,26 @@ function CheckInCard({ attendance, setTodayAttendance, loadAttendanceData }) {
     }
   }, [attendance]);
 
-  const handleCheckIn = async () => {
-    try {
-      setLoading(true);
-      setMessage({ type: "", text: "" });
-      const response = await checkIn({ remarks: "Checked in on time" });
-      setTodayAttendance(response.data);
-      await loadAttendanceData();
-      setMessage({ type: "success", text: "Check In successful! Have a productive day." });
-    } catch (error) {
-      setMessage({
-        type: "error",
-        text: error.response?.data?.message || "Check In failed. Please try again.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCheckOut = async () => {
-    try {
-      setLoading(true);
-      setMessage({ type: "", text: "" });
-      const response = await checkOut();
-      setTodayAttendance(response.data);
-      await loadAttendanceData();
-      setMessage({ type: "success", text: "Check Out successful! See you tomorrow." });
-    } catch (error) {
-      setMessage({
-        type: "error",
-        text: error.response?.data?.message || "Check Out failed. Please try again.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleOpenFaceModal = (action) => {
+  const handleOpenFaceAttendance = () => {
     if (!isFaceRegistered) {
       setMessage({
         type: "error",
-        text: "Your face is not registered yet. Please register your face first.",
+        text: "Face registration is required for biometric attendance. Please register your face first.",
       });
       setEnrollmentModalOpen(true);
       return;
     }
-    setBiometricAction(action);
     setBiometricModalOpen(true);
   };
 
-  const handleBiometricSuccess = async (updatedAttendance) => {
-    if (updatedAttendance) {
-      setTodayAttendance(updatedAttendance);
+  const handleBiometricSuccess = async (result) => {
+    if (result?.data) {
+      setTodayAttendance(result.data);
     }
     await loadAttendanceData();
     setMessage({
       type: "success",
-      text: `Face ${biometricAction === "check-in" ? "Check In" : "Check Out"} successful!`,
+      text: result?.message || "Biometric Attendance recorded successfully!",
     });
   };
 
@@ -136,7 +96,7 @@ function CheckInCard({ attendance, setTodayAttendance, loadAttendanceData }) {
     await loadBiometricStatus();
     setMessage({
       type: "success",
-      text: "Face registered successfully! You can now use Face Attendance.",
+      text: "Face registered successfully! You can now mark your attendance using Face Biometrics.",
     });
   };
 
@@ -158,7 +118,7 @@ function CheckInCard({ attendance, setTodayAttendance, loadAttendanceData }) {
       {/* Card header */}
       <div className="checkin-header">
         <div className="checkin-header-info">
-          <h2 className="checkin-title">Attendance</h2>
+          <h2 className="checkin-title">Face Biometric Attendance</h2>
           <span className="checkin-date">
             <FiCalendar size={13} /> {todayStr}
           </span>
@@ -202,72 +162,62 @@ function CheckInCard({ attendance, setTodayAttendance, loadAttendanceData }) {
         </div>
       )}
 
-      {/* Face Biometric Primary Buttons */}
-      <div className="checkin-actions" style={{ marginBottom: "10px" }}>
-        <button
-          id="face-checkin-btn"
-          type="button"
-          className={`checkin-btn checkin-btn-in ${isCheckedIn || isCheckedOut ? "checkin-btn-disabled" : ""}`}
-          style={{ background: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)", color: "#fff", border: "none" }}
-          onClick={() => handleOpenFaceModal("check-in")}
-          disabled={loading || isCheckedIn || isCheckedOut}
-          title="Live Face Attendance Check In"
-        >
-          <FiSmile size={18} />
-          <span>Face Check In</span>
-        </button>
-
-        <button
-          id="face-checkout-btn"
-          type="button"
-          className={`checkin-btn checkin-btn-out ${!isCheckedIn ? "checkin-btn-disabled" : ""}`}
-          style={{ background: "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)", color: "#fff", border: "none" }}
-          onClick={() => handleOpenFaceModal("check-out")}
-          disabled={loading || !isCheckedIn}
-          title="Live Face Attendance Check Out"
-        >
-          <FiSmile size={18} />
-          <span>Face Check Out</span>
-        </button>
-      </div>
-
-      {/* Standard Action Buttons */}
-      <div className="checkin-actions">
-        <button
-          id="checkin-btn"
-          type="button"
-          className={`checkin-btn checkin-btn-in ${isCheckedIn || isCheckedOut ? "checkin-btn-disabled" : ""}`}
-          onClick={handleCheckIn}
-          disabled={loading || isCheckedIn || isCheckedOut}
-          title={isCheckedIn ? "Already checked in" : isCheckedOut ? "Already checked out today" : "Check In"}
-        >
-          {loading && !isCheckedIn ? (
-            <span className="checkin-spinner" />
-          ) : (
-            <FiLogIn size={18} />
-          )}
-          <span>{loading && !isCheckedIn ? "Checking In…" : "Manual Check In"}</span>
-        </button>
-
-        <button
-          id="checkout-btn"
-          type="button"
-          className={`checkin-btn checkin-btn-out ${!isCheckedIn ? "checkin-btn-disabled" : ""}`}
-          onClick={handleCheckOut}
-          disabled={loading || !isCheckedIn}
-          title={!isCheckedIn ? "Check in first" : "Check Out"}
-        >
-          {loading && isCheckedIn ? (
-            <span className="checkin-spinner" />
-          ) : (
-            <FiLogOut size={18} />
-          )}
-          <span>{loading && isCheckedIn ? "Checking Out…" : "Manual Check Out"}</span>
-        </button>
-      </div>
+      {/* Face Biometric Attendance Action */}
+      {!isFaceRegistered ? (
+        <div className="biometric-not-registered-box" style={{ background: "#fff1f2", border: "1px solid #fecdd3", padding: "16px", borderRadius: "12px", textAlign: "center" }}>
+          <p style={{ margin: "0 0 10px 0", color: "#be123c", fontWeight: "600", fontSize: "0.9rem" }}>
+            Face Registration Required
+          </p>
+          <p style={{ margin: "0 0 14px 0", color: "#9f1239", fontSize: "0.82rem" }}>
+            Biometric attendance is enabled. Please register your face to mark attendance.
+          </p>
+          <button
+            type="button"
+            className="emp-btn-primary"
+            onClick={() => setEnrollmentModalOpen(true)}
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+          >
+            <FiUserCheck size={16} /> Register Face Now
+          </button>
+        </div>
+      ) : (
+        <div className="checkin-actions">
+          <button
+            id="face-attendance-btn"
+            type="button"
+            className={`checkin-btn checkin-btn-in ${isCheckedOut ? "checkin-btn-disabled" : ""}`}
+            style={{
+              width: "100%",
+              background: isCheckedOut
+                ? "#94a3b8"
+                : isCheckedIn
+                ? "linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)"
+                : "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+              color: "#fff",
+              border: "none",
+              padding: "14px",
+              fontSize: "1rem",
+              fontWeight: "600",
+              borderRadius: "12px",
+            }}
+            onClick={handleOpenFaceAttendance}
+            disabled={isCheckedOut}
+            title={isCheckedOut ? "Today's attendance completed" : "Start Live Face Attendance"}
+          >
+            <FiSmile size={20} />
+            <span>
+              {isCheckedOut
+                ? "Today's Attendance Completed ✓"
+                : isCheckedIn
+                ? "Face Check Out"
+                : "Face Check In"}
+            </span>
+          </button>
+        </div>
+      )}
 
       {/* Status & Enrollment Bar */}
-      <div className="checkin-status-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="checkin-status-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "14px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <div className={`checkin-status-dot ${isCheckedIn ? "dot-active" : isCheckedOut ? "dot-done" : "dot-idle"}`} />
           <span className="checkin-status-text">
@@ -279,31 +229,31 @@ function CheckInCard({ attendance, setTodayAttendance, loadAttendanceData }) {
           </span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setEnrollmentModalOpen(true)}
-          style={{
-            background: "none",
-            border: "none",
-            color: isFaceRegistered ? "#0284c7" : "#e11d48",
-            fontSize: "0.8rem",
-            fontWeight: "600",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
-          }}
-        >
-          <FiUserCheck size={14} />
-          {isFaceRegistered ? "Face Registered ✓" : "Register Face"}
-        </button>
+        {isFaceRegistered && (
+          <button
+            type="button"
+            onClick={() => setEnrollmentModalOpen(true)}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#0284c7",
+              fontSize: "0.8rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+            }}
+          >
+            <FiUserCheck size={14} /> Re-register Face
+          </button>
+        )}
       </div>
 
       {/* Biometric Verification Modal */}
       <BiometricModal
         isOpen={biometricModalOpen}
         onClose={() => setBiometricModalOpen(false)}
-        actionType={biometricAction}
         onSuccess={handleBiometricSuccess}
       />
 

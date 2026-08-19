@@ -1,15 +1,14 @@
-// Liveness detection helper using 68-point facial landmarks
+// Temporal Liveness Detection Helper using 68-point facial landmarks
 
 const dist = (p1, p2) => Math.hypot(p1.x - p2.x, p1.y - p2.y);
 
-// Calculate Eye Aspect Ratio (EAR)
+// Calculate Eye Aspect Ratio (EAR) across both eyes
 export const calculateEAR = (landmarks) => {
   const pts = landmarks.positions || landmarks;
   if (!pts || pts.length < 48) return 0.3;
 
-  // Left eye landmarks: 36..41
+  // Left eye: 36..41, Right eye: 42..47
   const leftEye = [pts[36], pts[37], pts[38], pts[39], pts[40], pts[41]];
-  // Right eye landmarks: 42..47
   const rightEye = [pts[42], pts[43], pts[44], pts[45], pts[46], pts[47]];
 
   const getEyeEAR = (eye) => {
@@ -19,10 +18,7 @@ export const calculateEAR = (landmarks) => {
     return h === 0 ? 0.3 : (v1 + v2) / (2.0 * h);
   };
 
-  const leftEAR = getEyeEAR(leftEye);
-  const rightEAR = getEyeEAR(rightEye);
-
-  return (leftEAR + rightEAR) / 2.0;
+  return (getEyeEAR(leftEye) + getEyeEAR(rightEye)) / 2.0;
 };
 
 // Calculate Normalized Nose Offset across Jaw width (0.0 to 1.0, center ~ 0.50)
@@ -45,18 +41,21 @@ export const calculateNoseOffset = (landmarks) => {
 export const CHALLENGES = {
   BLINK: {
     id: "BLINK",
-    title: "Blink Eyes",
+    title: "Blink Twice",
     instruction: "Please blink your eyes naturally.",
+    targetCount: 2,
   },
   TURN_LEFT: {
     id: "TURN_LEFT",
     title: "Turn Head Left",
     instruction: "Please turn your head slightly to the left.",
+    targetCount: 3,
   },
   TURN_RIGHT: {
     id: "TURN_RIGHT",
     title: "Turn Head Right",
     instruction: "Please turn your head slightly to the right.",
+    targetCount: 3,
   },
 };
 
@@ -68,40 +67,74 @@ export const getRandomChallenge = () => {
 
 export const createLivenessState = (challengeId) => ({
   challengeId,
+  // Temporal state machine for blink
+  blinkPhase: "OPEN", // "OPEN" | "CLOSING" | "CLOSED"
+  closedFrames: 0,
   blinkCount: 0,
-  eyeWasClosed: false,
+  lastBlinkTime: 0,
+
+  // Temporal state machine for head turn
   turnFrames: 0,
+
   isPassed: false,
   progress: 0, // 0 to 100
 });
 
-export const evaluateLivenessFrame = (landmarks, state) => {
+export const evaluateLivenessFrame = (landmarks, state, challengeConfig) => {
   if (state.isPassed) return state;
 
+  const now = Date.now();
   const newState = { ...state };
   const ear = calculateEAR(landmarks);
   const offset = calculateNoseOffset(landmarks);
 
-  if (state.challengeId === "BLINK") {
-    // EAR threshold for closed eyes: < 0.22; for open eyes: > 0.24
-    if (ear < 0.22 && !state.eyeWasClosed) {
-      newState.eyeWasClosed = true;
-    } else if (ear > 0.24 && state.eyeWasClosed) {
-      newState.eyeWasClosed = false;
-      newState.blinkCount = state.blinkCount + 1;
-      newState.progress = Math.min(100, (newState.blinkCount / 1) * 100);
+  const targetCount = challengeConfig?.targetCount || 2;
 
-      if (newState.blinkCount >= 1) {
-        newState.isPassed = true;
-        newState.progress = 100;
+  if (state.challengeId === "BLINK") {
+    // Cooldown check (400ms after last blink)
+    if (now - state.lastBlinkTime < 400) {
+      return state;
+    }
+
+    const CLOSED_THRESHOLD = 0.20;
+    const OPEN_THRESHOLD = 0.25;
+
+    if (state.blinkPhase === "OPEN") {
+      if (ear < CLOSED_THRESHOLD) {
+        newState.blinkPhase = "CLOSING";
+        newState.closedFrames = 1;
+      }
+    } else if (state.blinkPhase === "CLOSING") {
+      if (ear < CLOSED_THRESHOLD) {
+        newState.closedFrames = state.closedFrames + 1;
+        if (newState.closedFrames >= 2) {
+          newState.blinkPhase = "CLOSED";
+        }
+      } else {
+        newState.blinkPhase = "OPEN";
+        newState.closedFrames = 0;
+      }
+    } else if (state.blinkPhase === "CLOSED") {
+      if (ear > OPEN_THRESHOLD) {
+        // Valid blink completed!
+        newState.blinkPhase = "OPEN";
+        newState.closedFrames = 0;
+        newState.blinkCount = state.blinkCount + 1;
+        newState.lastBlinkTime = now;
+        newState.progress = Math.min(100, (newState.blinkCount / targetCount) * 100);
+
+        if (newState.blinkCount >= targetCount) {
+          newState.isPassed = true;
+          newState.progress = 100;
+        }
       }
     }
   } else if (state.challengeId === "TURN_LEFT") {
     // Turning head left shifts nose offset away from center (< 0.38 or > 0.62)
     if (offset < 0.38 || offset > 0.62) {
       newState.turnFrames = state.turnFrames + 1;
-      newState.progress = Math.min(100, (newState.turnFrames / 2) * 100);
-      if (newState.turnFrames >= 2) {
+      newState.progress = Math.min(100, (newState.turnFrames / targetCount) * 100);
+      if (newState.turnFrames >= targetCount) {
         newState.isPassed = true;
         newState.progress = 100;
       }
@@ -110,8 +143,8 @@ export const evaluateLivenessFrame = (landmarks, state) => {
     // Turning head right shifts nose offset away from center (< 0.38 or > 0.62)
     if (offset < 0.38 || offset > 0.62) {
       newState.turnFrames = state.turnFrames + 1;
-      newState.progress = Math.min(100, (newState.turnFrames / 2) * 100);
-      if (newState.turnFrames >= 2) {
+      newState.progress = Math.min(100, (newState.turnFrames / targetCount) * 100);
+      if (newState.turnFrames >= targetCount) {
         newState.isPassed = true;
         newState.progress = 100;
       }

@@ -46,6 +46,21 @@ const loadFaceApiModels = async () => {
   return modelsLoadedPromise;
 };
 
+// Helper: Average an array of 128-float descriptor vectors element-wise
+const averageDescriptors = (descriptors) => {
+  if (!descriptors || descriptors.length === 0) return null;
+  const len = descriptors[0].length;
+  const avg = new Float32Array(len);
+  for (let i = 0; i < len; i++) {
+    let sum = 0;
+    for (let j = 0; j < descriptors.length; j++) {
+      sum += descriptors[j][i];
+    }
+    avg[i] = sum / descriptors.length;
+  }
+  return Array.from(avg);
+};
+
 export default function FaceCamera({
   onFaceVerified,
   onError,
@@ -53,27 +68,36 @@ export default function FaceCamera({
 }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const streamRef = useRef(null);
-  const timerRef = useRef(null);
 
+  // Persistent refs across camera session
+  const streamRef = useRef(null);
+  const animationFrameRef = useRef(null);
+  const isLoopRunningRef = useRef(false);
+  const isVerifiedRef = useRef(false);
+
+  // State refs for detection loop (prevents re-instantiating detection loop)
+  const challengeRef = useRef(getRandomChallenge());
+  const livenessStateRef = useRef(createLivenessState(challengeRef.current.id));
+  const validDescriptorsRef = useRef([]);
+
+  // React state for UI rendering only
   const [loadingModels, setLoadingModels] = useState(true);
   const [cameraActive, setCameraActive] = useState(false);
   const [statusMessage, setStatusMessage] = useState("Initializing camera...");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [challenge, setChallenge] = useState(() => getRandomChallenge());
-  const [livenessState, setLivenessState] = useState(() =>
-    createLivenessState(challenge.id)
-  );
-
+  const [challenge, setChallenge] = useState(challengeRef.current);
+  const [progress, setProgress] = useState(0);
   const [isVerified, setIsVerified] = useState(false);
 
   // Stop camera MediaStream tracks safely
   const stopCamera = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
+    isLoopRunningRef.current = false;
+
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => {
         try {
@@ -84,14 +108,19 @@ export default function FaceCamera({
       });
       streamRef.current = null;
     }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
     setCameraActive(false);
   }, []);
 
-  // Initialize camera
-  const startCamera = useCallback(async () => {
+  // Single Camera Initialization (ONCE per session)
+  const initCamera = useCallback(async () => {
+    if (streamRef.current) return;
+
     try {
       setErrorMessage("");
-      setStatusMessage("Loading face detection models...");
+      setStatusMessage("Loading face AI models...");
       setLoadingModels(true);
 
       await loadFaceApiModels();
@@ -103,36 +132,38 @@ export default function FaceCamera({
         throw new Error("Camera API is not supported in your browser.");
       }
 
-      const constraints = {
+      const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: "user",
+          facingMode: { ideal: "user" },
           width: { ideal: 640 },
           height: { ideal: 480 },
         },
         audio: false,
-      };
+      });
 
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = stream;
 
       if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+        const video = videoRef.current;
+        // Safari requires muted to be set on the element directly before play
+        video.muted = true;
+        video.srcObject = stream;
+        video.playsInline = true;
         try {
-          await videoRef.current.play();
+          await video.play();
         } catch (playErr) {
-          // Ignore AbortError when play() is interrupted by React re-render
           if (playErr.name !== "AbortError" && playErr.name !== "NotAllowedError") {
             throw playErr;
           }
         }
         setCameraActive(true);
-        setStatusMessage("Looking for face...");
+        setStatusMessage("Position face in frame...");
       }
     } catch (err) {
       setLoadingModels(false);
       let msg = "Could not access camera.";
       if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-        msg = "Camera permission was denied. Please allow camera access in browser settings.";
+        msg = "Camera permission denied. Please enable camera access in browser settings.";
       } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
         msg = "No camera was detected on this device.";
       } else if (err.name === "NotReadableError" || err.name === "TrackStartError") {
@@ -148,115 +179,147 @@ export default function FaceCamera({
     }
   }, [onError, stopCamera]);
 
-  // Start camera on mount & cleanup on unmount
+  // Continuous Detection Loop (Managed via single animationFrame loop)
+  const startDetectionLoop = useCallback(() => {
+    if (isLoopRunningRef.current) return;
+    isLoopRunningRef.current = true;
+
+    let lastFrameTime = 0;
+
+    const detectFrame = async (timestamp) => {
+      if (!isLoopRunningRef.current || isVerifiedRef.current) return;
+
+      // Throttle detection to ~10-12 FPS (every 85ms) for smooth CPU performance
+      if (timestamp - lastFrameTime > 85) {
+        lastFrameTime = timestamp;
+
+        if (
+          videoRef.current &&
+          canvasRef.current &&
+          !videoRef.current.paused &&
+          !videoRef.current.ended
+        ) {
+          const video = videoRef.current;
+          const canvas = canvasRef.current;
+
+          const displaySize = {
+            width: video.videoWidth || 640,
+            height: video.videoHeight || 480,
+          };
+
+          if (displaySize.width > 0 && displaySize.height > 0) {
+            faceapi.matchDimensions(canvas, displaySize);
+
+            try {
+              const detection = await faceapi
+                .detectSingleFace(
+                  video,
+                  new faceapi.TinyFaceDetectorOptions({
+                    inputSize: 320,
+                    scoreThreshold: 0.4,
+                  })
+                )
+                .withFaceLandmarks()
+                .withFaceDescriptor();
+
+              const ctx = canvas.getContext("2d");
+              ctx.clearRect(0, 0, displaySize.width, displaySize.height);
+
+              if (!detection) {
+                setStatusMessage("Looking for face... Position face inside frame.");
+              } else {
+                const resizedDetection = faceapi.resizeResults(detection, displaySize);
+                faceapi.draw.drawFaceLandmarks(canvas, resizedDetection);
+
+                const box = resizedDetection.detection.box;
+                const faceHeightRatio = box.height / displaySize.height;
+
+                if (faceHeightRatio < 0.10) {
+                  setStatusMessage("Please move closer to the camera.");
+                } else if (faceHeightRatio > 0.92) {
+                  setStatusMessage("Please step back slightly.");
+                } else {
+                  // Evaluate active liveness
+                  const nextState = evaluateLivenessFrame(
+                    resizedDetection.landmarks,
+                    livenessStateRef.current,
+                    challengeRef.current
+                  );
+
+                  livenessStateRef.current = nextState;
+                  setProgress(Math.round(nextState.progress));
+
+                  if (!nextState.isPassed) {
+                    setStatusMessage(`Liveness Prompt: ${challengeRef.current.instruction}`);
+                  } else {
+                    // Liveness Passed! Collect sample(s)
+                    validDescriptorsRef.current.push(Array.from(detection.descriptor));
+
+                    const requiredSamples = mode === "enroll" ? 4 : 1;
+
+                    if (validDescriptorsRef.current.length >= requiredSamples) {
+                      isVerifiedRef.current = true;
+                      setIsVerified(true);
+                      setStatusMessage("Liveness & face verification passed ✓");
+
+                      stopCamera();
+
+                      const finalDescriptor =
+                        mode === "enroll"
+                          ? averageDescriptors(validDescriptorsRef.current)
+                          : validDescriptorsRef.current[0];
+
+                      onFaceVerified(finalDescriptor);
+                      return;
+                    } else {
+                      setStatusMessage(
+                        `Collecting face samples (${validDescriptorsRef.current.length}/${requiredSamples})...`
+                      );
+                    }
+                  }
+                }
+              }
+            } catch (err) {
+              console.warn("Face detection frame error:", err);
+            }
+          }
+        }
+      }
+
+      if (isLoopRunningRef.current && !isVerifiedRef.current) {
+        animationFrameRef.current = requestAnimationFrame(detectFrame);
+      }
+    };
+
+    animationFrameRef.current = requestAnimationFrame(detectFrame);
+  }, [mode, onFaceVerified, stopCamera]);
+
+  // Start camera on mount & start loop when camera is active
   useEffect(() => {
-    startCamera();
+    initCamera();
     return () => {
       stopCamera();
     };
-  }, [startCamera, stopCamera]);
+  }, [initCamera, stopCamera]);
 
-  // Detection and Liveness Loop
   useEffect(() => {
-    if (!cameraActive || loadingModels || isVerified) return;
-
-    let currentLivenessState = livenessState;
-
-    timerRef.current = setInterval(async () => {
-      if (!videoRef.current || !canvasRef.current || videoRef.current.paused || videoRef.current.ended) {
-        return;
-      }
-
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-
-      const displaySize = {
-        width: video.videoWidth || 640,
-        height: video.videoHeight || 480,
-      };
-
-      if (displaySize.width === 0 || displaySize.height === 0) return;
-
-      faceapi.matchDimensions(canvas, displaySize);
-
-      try {
-        const detection = await faceapi
-          .detectSingleFace(
-            video,
-            new faceapi.TinyFaceDetectorOptions({
-              inputSize: 320,
-              scoreThreshold: 0.4,
-            })
-          )
-          .withFaceLandmarks()
-          .withFaceDescriptor();
-
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, displaySize.width, displaySize.height);
-
-        if (!detection) {
-          setStatusMessage("Looking for face... Position face in frame.");
-          return;
-        }
-
-        const resizedDetection = faceapi.resizeResults(detection, displaySize);
-
-        // Draw landmarks & bounding box guide
-        faceapi.draw.drawFaceLandmarks(canvas, resizedDetection);
-
-        // Quality and positioning checks (lenient thresholds)
-        const box = resizedDetection.detection.box;
-        const faceHeightRatio = box.height / displaySize.height;
-
-        if (faceHeightRatio < 0.10) {
-          setStatusMessage("Please move closer to the camera.");
-          return;
-        }
-
-        if (faceHeightRatio > 0.92) {
-          setStatusMessage("Please step back slightly.");
-          return;
-        }
-
-        // Evaluate active liveness
-        const nextLivenessState = evaluateLivenessFrame(
-          resizedDetection.landmarks,
-          currentLivenessState
-        );
-
-        currentLivenessState = nextLivenessState;
-        setLivenessState(nextLivenessState);
-
-        if (!nextLivenessState.isPassed) {
-          setStatusMessage(`Liveness Prompt: ${challenge.instruction}`);
-        } else {
-          // Liveness Passed!
-          setIsVerified(true);
-          setStatusMessage("Liveness verified ✓ Processing face profile...");
-          stopCamera();
-
-          const descriptor = Array.from(detection.descriptor);
-          onFaceVerified(descriptor);
-        }
-      } catch (err) {
-        console.warn("Face detection error:", err);
-      }
-    }, 100);
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    };
-  }, [cameraActive, loadingModels, isVerified, challenge, livenessState, onFaceVerified, stopCamera]);
+    if (cameraActive && !loadingModels && !isVerified) {
+      startDetectionLoop();
+    }
+  }, [cameraActive, loadingModels, isVerified, startDetectionLoop]);
 
   const handleRetry = () => {
+    isVerifiedRef.current = false;
     setIsVerified(false);
+    validDescriptorsRef.current = [];
+
     const newChallenge = getRandomChallenge();
+    challengeRef.current = newChallenge;
+    livenessStateRef.current = createLivenessState(newChallenge.id);
+
     setChallenge(newChallenge);
-    setLivenessState(createLivenessState(newChallenge.id));
-    startCamera();
+    setProgress(0);
+    initCamera();
   };
 
   return (
@@ -279,13 +342,14 @@ export default function FaceCamera({
             ref={videoRef}
             className="face-camera-video"
             playsInline
+            autoPlay
             muted
           />
           <canvas ref={canvasRef} className="face-camera-canvas" />
 
           {/* Oval Face Alignment Guide Overlay */}
           <div className="face-camera-overlay-oval">
-            <div className={`face-camera-oval-ring ${livenessState.isPassed ? "passed" : ""}`} />
+            <div className={`face-camera-oval-ring ${isVerified ? "passed" : ""}`} />
           </div>
 
           {/* Status Overlay Banner */}
@@ -309,12 +373,12 @@ export default function FaceCamera({
           {!isVerified && !loadingModels && (
             <div className="face-camera-liveness-bar-wrap">
               <div className="face-camera-liveness-label">
-                Challenge: <strong>{challenge.title}</strong> ({Math.round(livenessState.progress)}%)
+                Challenge: <strong>{challenge.title}</strong> ({progress}%)
               </div>
               <div className="face-camera-progress-track">
                 <div
                   className="face-camera-progress-fill"
-                  style={{ width: `${livenessState.progress}%` }}
+                  style={{ width: `${progress}%` }}
                 />
               </div>
             </div>

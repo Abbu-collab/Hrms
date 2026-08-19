@@ -3,6 +3,7 @@ import express from "express";
 import {
   checkIn,
   checkOut,
+  autoBiometricAttendance,
   getTodayAttendance,
   getAttendanceHistory,
   getMonthlyAttendance,
@@ -29,6 +30,14 @@ router.get("/test", (req, res) => {
     message: "Attendance Routes Working"
   });
 });
+
+
+router.post(
+  "/auto-biometric",
+  verifyToken,
+  authorizeRoles("Employee", "HR", "HR Manager"),
+  autoBiometricAttendance
+);
 
 
 router.post(

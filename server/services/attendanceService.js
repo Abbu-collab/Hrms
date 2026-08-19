@@ -233,12 +233,70 @@ export const checkOutService = async (employeeId, biometricToken) => {
 
   await attendance.save();
 
-
-
   return attendance;
-
-
 };
+
+
+// ================= AUTO BIOMETRIC ATTENDANCE SERVICE =================
+
+export const autoBiometricAttendanceService = async ({ employeeId, location, remarks, biometricToken }) => {
+  if (!biometricToken) {
+    throw new Error("Biometric verification token is required.");
+  }
+
+  // Verify token
+  try {
+    const decoded = jwt.verify(biometricToken, process.env.JWT_SECRET);
+    if (String(decoded.userId) !== String(employeeId) || decoded.purpose !== "biometric_attendance") {
+      throw new Error("Biometric token does not match authenticated user.");
+    }
+  } catch (err) {
+    throw new Error(err.message || "Invalid or expired biometric token. Please re-verify your face.");
+  }
+
+  const today = new Date();
+  const startOfDay = new Date(today);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date(today);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const attendance = await Attendance.findOne({
+    employeeId,
+    date: {
+      $gte: startOfDay,
+      $lte: endOfDay,
+    },
+  });
+
+  if (!attendance) {
+    // 1. No attendance record today -> Perform Check In
+    const record = await checkInService({ employeeId, location, remarks: remarks || "Biometric Face Check-In", biometricToken });
+    return {
+      action: "CHECK_IN",
+      data: record,
+      message: "Check In successful!",
+    };
+  }
+
+  if (attendance.checkIn && !attendance.checkOut) {
+    // 2. Checked in, not checked out -> Perform Check Out
+    const record = await checkOutService(employeeId, biometricToken);
+    return {
+      action: "CHECK_OUT",
+      data: record,
+      message: "Check Out successful!",
+    };
+  }
+
+  // 3. Both check-in & check-out exist -> Completed
+  return {
+    action: "COMPLETED",
+    data: attendance,
+    message: "Today's attendance is already completed.",
+  };
+};
+
 
 // ================= TODAY ATTENDANCE =================
 

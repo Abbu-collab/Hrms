@@ -1,6 +1,7 @@
 import {
   checkInService,
   checkOutService,
+  autoBiometricAttendanceService,
   getTodayAttendanceService,
   getAttendanceHistoryService,
   getMonthlyAttendanceService,
@@ -9,6 +10,40 @@ import {
 } from "../services/attendanceService.js";
 
 import User from "../models/UserModel.js";
+
+
+// AUTO BIOMETRIC ATTENDANCE
+export const autoBiometricAttendance = async (req, res) => {
+  try {
+    const employeeId = req.user?._id || req.user?.id;
+
+    if (!employeeId) {
+      throw new Error("User authentication failed.");
+    }
+
+    const { location, remarks, biometricToken } = req.body;
+
+    const result = await autoBiometricAttendanceService({
+      employeeId,
+      location,
+      remarks,
+      biometricToken,
+    });
+
+    res.status(200).json({
+      success: true,
+      action: result.action,
+      message: result.message,
+      data: result.data,
+    });
+
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 
 // CHECK IN

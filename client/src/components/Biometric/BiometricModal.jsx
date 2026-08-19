@@ -1,25 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import FaceCamera from "./FaceCamera";
 import { verifyFace } from "../../services/biometricService";
-import { checkIn, checkOut } from "../../services/attendanceService";
+import { autoBiometricAttendance } from "../../services/attendanceService";
 import { FiX, FiCheckCircle, FiAlertCircle, FiShield, FiClock } from "react-icons/fi";
 import "./BiometricModal.css";
 
 export default function BiometricModal({
   isOpen,
   onClose,
-  actionType = "check-in", // "check-in" | "check-out"
   onSuccess,
 }) {
   const [verifying, setVerifying] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [error, setError] = useState("");
-  const [successInfo, setSuccessInfo] = useState(null);
+  const [resultInfo, setResultInfo] = useState(null);
+
+  // In-progress guard to prevent double submissions
+  const isSubmittingRef = useRef(false);
 
   if (!isOpen) return null;
 
   const handleFaceVerified = async (faceEmbedding) => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
+
     setVerifying(true);
     setError("");
 
@@ -34,26 +39,19 @@ export default function BiometricModal({
       setVerifying(false);
       setSubmitting(true);
 
-      // 2. Call Check-In or Check-Out API with biometricToken
-      let attRes;
-      if (actionType === "check-in") {
-        attRes = await checkIn({
-          remarks: "Biometric Face Check-In",
-          biometricToken: verifyRes.biometricToken,
-        });
-      } else {
-        attRes = await checkOut(verifyRes.biometricToken);
-      }
+      // 2. Call automatic biometric attendance API
+      const attRes = await autoBiometricAttendance(verifyRes.biometricToken);
 
       setSubmitting(false);
       setCompleted(true);
-      setSuccessInfo(attRes.data);
+      setResultInfo(attRes);
 
       setTimeout(() => {
-        if (onSuccess) onSuccess(attRes.data);
+        if (onSuccess) onSuccess(attRes);
         handleClose();
-      }, 2200);
+      }, 2500);
     } catch (err) {
+      isSubmittingRef.current = false;
       setVerifying(false);
       setSubmitting(false);
       const msg = err.response?.data?.message || err.message || "Verification failed. Please try again.";
@@ -62,15 +60,14 @@ export default function BiometricModal({
   };
 
   const handleClose = () => {
+    isSubmittingRef.current = false;
     setVerifying(false);
     setSubmitting(false);
     setCompleted(false);
     setError("");
-    setSuccessInfo(null);
+    setResultInfo(null);
     onClose();
   };
-
-  const titleText = actionType === "check-in" ? "Face Check-In" : "Face Check-Out";
 
   return (
     <div className="biometric-modal-backdrop" onClick={handleClose}>
@@ -85,9 +82,9 @@ export default function BiometricModal({
               <FiShield size={18} />
             </div>
             <div>
-              <h3 className="biometric-modal-title">{titleText}</h3>
+              <h3 className="biometric-modal-title">Live Face Attendance</h3>
               <p className="biometric-modal-subtitle">
-                Live Biometric Attendance Verification
+                Automatic Biometric Verification & Attendance Logging
               </p>
             </div>
           </div>
@@ -108,16 +105,12 @@ export default function BiometricModal({
               <div className="biometric-success-icon-wrap">
                 <FiCheckCircle size={48} className="biometric-success-icon" />
               </div>
-              <h4>
-                {actionType === "check-in"
-                  ? "Check-In Successful!"
-                  : "Check-Out Successful!"}
-              </h4>
+              <h4>{resultInfo?.message || "Biometric Verification Completed"}</h4>
               <p className="biometric-success-sub">
                 Your identity was verified with active liveness check.
               </p>
 
-              {successInfo && (
+              {resultInfo?.data && (
                 <div className="biometric-receipt-card">
                   <div className="biometric-receipt-row">
                     <span>
@@ -125,9 +118,9 @@ export default function BiometricModal({
                     </span>
                     <strong>
                       {new Date(
-                        actionType === "check-in"
-                          ? successInfo.checkIn
-                          : successInfo.checkOut || Date.now()
+                        resultInfo.action === "CHECK_IN"
+                          ? resultInfo.data.checkIn
+                          : resultInfo.data.checkOut || Date.now()
                       ).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
@@ -136,8 +129,14 @@ export default function BiometricModal({
                     </strong>
                   </div>
                   <div className="biometric-receipt-row">
-                    <span>Method:</span>
-                    <span className="biometric-method-badge">Face Biometric ✓</span>
+                    <span>Action:</span>
+                    <span className="biometric-method-badge">
+                      {resultInfo.action === "CHECK_IN"
+                        ? "Check-In Recorded ✓"
+                        : resultInfo.action === "CHECK_OUT"
+                        ? "Check-Out Recorded ✓"
+                        : "Day Complete ✓"}
+                    </span>
                   </div>
                   <div className="biometric-receipt-row">
                     <span>Liveness:</span>
@@ -151,8 +150,8 @@ export default function BiometricModal({
               <div className="biometric-spinner-lg" />
               <h4>
                 {verifying
-                  ? "Verifying Identity with Server..."
-                  : "Recording Attendance Record..."}
+                  ? "Verifying Face Identity..."
+                  : "Logging Attendance Record..."}
               </h4>
               <p>Please hold still while security check completes.</p>
             </div>

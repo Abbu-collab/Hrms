@@ -12,6 +12,17 @@ const getAuthConfig = () => {
   };
 };
 
+// Auto Biometric Attendance
+export async function autoBiometricAttendance(biometricToken) {
+  const response = await axios.post(
+    `${API}/auto-biometric`,
+    { biometricToken },
+    getAuthConfig()
+  );
+
+  return response.data;
+}
+
 // Check In
 export async function checkIn(data) {
   const response = await axios.post(
